@@ -29,7 +29,7 @@ const NewProducts = () => {
     const isNewProduct = (createdAt) => {
         const createdDate = new Date(createdAt);
         const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 30);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 100);
         return createdDate > sevenDaysAgo;
     };
 
