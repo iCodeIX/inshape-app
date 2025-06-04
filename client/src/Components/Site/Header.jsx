@@ -62,9 +62,9 @@ function MainNav() {
     return (
         <nav className="flex py-4 hidden md:block z-50 max-w-lg mx-auto">
             <Link to='/' className='p-3 cursor-pointer py-1 font-semibold rounded hover:bg-red-400 hover:text-white mx-2'>Home</Link>
-            <Link to='/AllProducts' className='p-3 cursor-pointer py-1 font-semibold  rounded hover:bg-red-400 hover:text-white mx-2'>All Products</Link>
-            <Link to='/NewProducts' className='p-3 cursor-pointer py-1 font-semibold  rounded hover:bg-red-400 hover:text-white mx-2r'>New Products</Link>
-            <Link to='/TopProducts' className='p-3 cursor-pointer py-1 font-semibold  rounded hover:bg-red-400 hover:text-white mx-2'>Top Products</Link>
+            <Link to='/all-products' className='p-3 cursor-pointer py-1 font-semibold  rounded hover:bg-red-400 hover:text-white mx-2'>All Products</Link>
+            <Link to='/new-products' className='p-3 cursor-pointer py-1 font-semibold  rounded hover:bg-red-400 hover:text-white mx-2r'>New Products</Link>
+            <Link to='/top-products' className='p-3 cursor-pointer py-1 font-semibold  rounded hover:bg-red-400 hover:text-white mx-2'>Top Products</Link>
         </nav>
     )
 }
