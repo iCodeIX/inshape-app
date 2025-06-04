@@ -7,6 +7,7 @@ export const add = async (req, res) => {
         const userId = req.user._id;
         const { productId, quantity } = req.body;
 
+
         if (!productId || !quantity || quantity < 1) {
             return res.status(400).json({ message: 'Invalid product or quantity' });
         }

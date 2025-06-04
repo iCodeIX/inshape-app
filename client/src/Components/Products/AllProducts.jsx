@@ -49,11 +49,10 @@ const AllProducts = () => {
     const hasSearch = searchTerm.trim() !== '';
 
     const dispatch = useDispatch();
-    const cartItems = useSelector((state) => state.cart.items);
-    
-    const handleAddtoCart = async (productId, quantity = 1) => {
-        dispatch(addToCart(productId, quantity));
-    }
+
+    const handleAddToCart = async (productId, quantity = 1) => {
+        dispatch(addToCart({ productId, quantity }));
+    };
 
     return (
         <section className="p-8">
@@ -67,7 +66,7 @@ const AllProducts = () => {
                                     <img className="w-80 h-60" src={product.productImage} alt={product.productName} />
                                     <h3 className="text-md font-semibold">{product.productName}</h3>
                                     <p className="text-sm">Price: <label>₱{product.productPrice}</label></p>
-                                    <button className="w-full my-2 p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 mx-auto" onClick={() => addToCart(product._id)}>ADD TO CART</button>
+                                    <button className="w-full my-2 p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 mx-auto" onClick={() => handleAddToCart(product._id)}>ADD TO CART</button>
                                 </div>
                             ))}
                         </div>
@@ -88,7 +87,7 @@ const AllProducts = () => {
                                         <img className="w-80 h-60" src={product.productImage} alt={product.productName} />
                                         <h3 className="text-md font-semibold">{product.productName}</h3>
                                         <p className="text-sm">Price: <label>₱{product.productPrice}</label></p>
-                                        <button className="w-full p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 my-2 mx-auto" onClick={() => handleAddtoCart(product._id)}>ADD TO CART</button>
+                                        <button className="w-full p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 my-2 mx-auto" onClick={() => handleAddToCart(product._id)}>ADD TO CART</button>
                                     </div>
                                 ))}
                             </div>

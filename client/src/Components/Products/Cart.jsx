@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, removeItem, updateQuantity } from '../../features/cart/cartSlice.js';
 
-const DisplayCart = ({ cartItems, updateQuantity, handleRemoveItem }) => {
+const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
+    const cartItems = useSelector((state) => state.cart.items) || [];
 
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.productId.productPrice * item.quantity,
@@ -71,6 +72,8 @@ const DisplayCart = ({ cartItems, updateQuantity, handleRemoveItem }) => {
 
     )
 }
+
+
 const NoProfile = ({ handleCloseCart }) => {
     const navigate = useNavigate();
     return (
@@ -112,30 +115,7 @@ const Cart = ({ handleOpenCart, handleCloseCart }) => {
     const handleRemoveItem = (productId) => {
         dispatch(removeItem({ productId }));
     }
-    // useEffect(() => {
-    //     const loadCart = async () => {
-    //         const items = await fetchCart();
-    //         setCartItems(items);
-    //     };
-    //     loadCart();
-    // }, []);
 
-    // const updateQuantity = async (productId, newQty) => {
-    //     console.log(productId, newQty);
-    //     if (newQty < 1) return; // Optional: prevent 0 quantity
-
-    //     try {
-    //         const res = await API.post('/cart/update-quantity', {
-    //             productId,
-    //             quantity: newQty,
-    //         });
-
-    //         // Optionally refresh cart or update state:
-    //         setCartItems(res.data.items);
-    //     } catch (err) {
-    //         console.error('Failed to update quantity:', err.response?.data || err);
-    //     }
-    // };
     return (
         <div className="absolute top-0 right-0 h-[100vh] w-full md:max-w-lg bg-white shadow-lg z-50">
             <div onClick={handleCloseCart} className='absolute top-4 right-4 cursor-pointer'><img className='w-8 m-2' src={closeIcon}></img></div>
@@ -144,7 +124,7 @@ const Cart = ({ handleOpenCart, handleCloseCart }) => {
                     🛒 <span>Your Cart</span>
                 </h1>
 
-                {token ? <DisplayCart cartItems={cartItems} updateQuantity={handleQuantityChange} handleRemoveItem={handleRemoveItem} /> : <NoProfile handleCloseCart={handleCloseCart} />}
+                {token ? <DisplayCart updateQuantity={handleQuantityChange} handleRemoveItem={handleRemoveItem} /> : <NoProfile handleCloseCart={handleCloseCart} />}
             </div>
         </div>
 

@@ -2,15 +2,27 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../Components/utils/axios';
 
 //async thunk to add cart
-export const addToCart = createAsyncThunk('cart/addToCart', async (productId, quantity) => {
-    const res = await API.post('/cart/add', { productId, quantity });
-    console.log(res.data.items);
+export const addToCart = createAsyncThunk('cart/addToCart', async ({ productId, quantity }) => {
+    const token = localStorage.getItem('token'); // Or however you store it
+
+    const res = await API.post(
+        '/cart/add',
+        { productId, quantity },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+
     return res.data.items;
-})
+});
+
+
 // Async thunk to fetch cart
 export const fetchCart = createAsyncThunk('cart/fetchCart', async () => {
     const res = await API.get('/cart/fetchCart');
-    return res.data.items;``
+    return res.data.items; ``
 });
 
 // Async thunk to update quantity
