@@ -7,9 +7,11 @@ import connection from './Config/connection.js';
 import dotenv from 'dotenv';
 dotenv.config();
 const allowedOrigins = ['http://localhost:5173'];
+const inshape = ['https://inshape-app.onrender.com'];
 const app = express();
+
 app.use(cors({
-    origin: allowedOrigins,
+    origin: inshape,
     credentials: true // optional if you're using cookies or sessions
 }));
 app.use(express.json());

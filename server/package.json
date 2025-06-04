@@ -8,5 +8,8 @@
     "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
