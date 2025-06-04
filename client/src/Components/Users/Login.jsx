@@ -65,7 +65,7 @@ const Login = () => {
 
                 <div
                     className="text-sm text-green-600 mt-4 text-center cursor-pointer hover:underline"
-                    onClick={() => navigate('/ForgotPass')}
+                    onClick={() => navigate('/forgot-pass')}
                 >
                     FORGOT YOUR PASSWORD?
                 </div>
@@ -80,7 +80,7 @@ const Login = () => {
 
                 <div
                     className="text-sm text-green-600 mt-6 text-center cursor-pointer hover:underline"
-                    onClick={() => navigate('/Register')}
+                    onClick={() => navigate('/register')}
                 >
                     DON'T HAVE AN ACCOUNT? REGISTER
                 </div>

@@ -40,7 +40,7 @@ const Register = () => {
 
                 <div
                     className="text-sm text-green-600 mb-4 text-center cursor-pointer hover:underline"
-                    onClick={() => navigate('/Login')}
+                    onClick={() => navigate('/login')}
                 >
                     ALREADY HAVE AN ACCOUNT? SIGN IN
                 </div>

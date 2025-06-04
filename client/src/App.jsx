@@ -23,7 +23,7 @@ import { useEffect } from 'react';
 
 function App() {
   const location = useLocation();
-  const hiddenRoutes = ['/Register', '/Login', '/ForgotPass', '/Profile', '/Cart', , '/AllProducts', '/NewProducts', '/TopProducts', '/ManageProducts', '/OrdersSummary', '/ViewOrders', '/SetUpPayments'];
+  const hiddenRoutes = ['/register', '/login', '/forgotPass', '/profile', '/cart',  '/all-products', '/new-products', '/top-products', '/manage-products', '/orders-summary', '/view-orders', '/setup-payments'];
   const hideLayoutComponents = hiddenRoutes.includes(location.pathname);
 
 
@@ -39,19 +39,18 @@ function App() {
       <Header />
       <div className='pt-50'>
         <Routes>
-          <Route path="/Profile" element={<Profile />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path='/ForgotPass' element={<ForgotPass />} />
-          <Route path="/Cart" element={<Cart />} />
-          <Route path="/AllProducts" element={<AllProducts />} />
-          <Route path="/AllProducts" element={<AllProducts />} />
-          <Route path="/NewProducts" element={<NewProducts />} />
-          <Route path="/TopProducts" element={<TopProducts />} />
-          <Route path="/ManageProducts" element={<ManageProducts />} />
-          <Route path="/OrdersSummary" element={<OrdersSummary />} />
-          <Route path="/ViewOrders" element={<ViewOrders />} />
-          <Route path="/SetUpPayments" element={<SetUpPayments />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path='/forgot-pass' element={<ForgotPass />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/all-products" element={<AllProducts />} />
+          <Route path="/new-products" element={<NewProducts />} />
+          <Route path="/top-products" element={<TopProducts />} />
+          <Route path="/manage-products" element={<ManageProducts />} />
+          <Route path="/orders-summary" element={<OrdersSummary />} />
+          <Route path="/view-orders" element={<ViewOrders />} />
+          <Route path="/setup-payments" element={<SetUpPayments />} />
         </Routes>
       </div>
 

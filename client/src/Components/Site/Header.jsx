@@ -38,9 +38,9 @@ function Navbar() {
                             <img src={close} alt="close" />
                         </div>
                         <Link to='/' className="px-3 py-1 rounded hover:bg-gray-200">Home</Link>
-                        <Link to='/AllProducts' className="px-3 py-1 rounded hover:bg-gray-200">All Products</Link>
-                        <Link to='/NewProducts' className="px-3 py-1 rounded hover:bg-gray-200">New Products</Link>
-                        <Link to='/TopProducts' className="px-3 py-1 rounded hover:bg-gray-200">Top Products</Link>
+                        <Link to='/all-products' className="px-3 py-1 rounded hover:bg-gray-200">All Products</Link>
+                        <Link to='/new-products' className="px-3 py-1 rounded hover:bg-gray-200">New Products</Link>
+                        <Link to='/top-products' className="px-3 py-1 rounded hover:bg-gray-200">Top Products</Link>
                     </div>
                     <div className="flex flex-row gap-2">
                         <a className="" href="https://facebook.com"><img className="w-6" src={facebook} alt="Facebook" /></a>
@@ -76,7 +76,7 @@ const Header = () => {
 
     const handleSearch = () => {
         if (searchInput.trim()) {
-            navigate(`/AllProducts?query=${encodeURIComponent(searchInput)}`);
+            navigate(`/all-products?query=${encodeURIComponent(searchInput)}`);
         }
     };
     const [showSearch, setShowSearch] = useState(true);
@@ -113,7 +113,7 @@ const Header = () => {
                 <div className="w-40"><img className="w-40" src={logo} alt="logo" /></div>
                 <div className="hidden md:block cursor-pointer ml-auto p-2" onClick={handleSearchClick}><img className="w-8 mx-2" src={searchImage ? searchIcon : closeIcon} alt="search" /></div>
                 <nav className="flex gap-2">
-                    <div onClick={() => navigate("./Profile")}><img className="cursor-pointer  w-8" src={profileIcon} alt="search" /></div>
+                    <div onClick={() => navigate("./profile")}><img className="cursor-pointer  w-8" src={profileIcon} alt="search" /></div>
                     <div onClick={openCart}><img className="cursor-pointer w-8" src={cart} alt="cart" /></div>
                 </nav>
             </div>

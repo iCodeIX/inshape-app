@@ -13,12 +13,10 @@ const allowedOrigins = [
     'http://localhost:5173',
     'https://inshape-app.onrender.com'
 ];
-
 const app = express();
 // Needed to use __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 app.use(cors({
     origin: allowedOrigins,

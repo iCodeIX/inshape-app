@@ -63,7 +63,7 @@ const DisplayCart = ({ cartItems, updateQuantity, handleRemoveItem }) => {
             <div className='absolute bottom-12 left-0 w-full p-4'>
                 <button onClick={() => {
                     handleCloseCart()
-                    navigate('./OrdersSummary')
+                    navigate('./orders-summary')
                 }} className='bg-sky-600 w-full h-10 text-white cursor-pointer hover:bg-sky-700'>Check out</button>
             </div>
         </>
@@ -79,12 +79,12 @@ const NoProfile = ({ handleCloseCart }) => {
                 <h3>It appears that you dont have an account.</h3>
                 <p>Try to</p>
                 <button className="bg-green-500 py-1 px-2 text-white rounded-sm cursor-pointer hover:bg-green-400" onClick={() => {
-                    navigate('/Register');
+                    navigate('/register');
                     handleCloseCart();
                 }}>Register</button>
                 <p>or</p>
                 <button className="bg-blue-500 py-1 px-2 text-white rounded-sm cursor-pointer hover:bg-blue-400" onClick={() => {
-                    navigate('/Login');
+                    navigate('/login');
                     handleCloseCart();
                 }}>Login</button>
             </div >
