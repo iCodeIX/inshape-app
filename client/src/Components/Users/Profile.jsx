@@ -27,19 +27,19 @@ const UserProfile = ({ name, id, email }) => {
                 <div className="flex flex-col gap-3 mb-4">
                     <button
                         className="w-full py-2 text-sm text-white bg-green-700 rounded hover:bg-green-600 transition"
-                        onClick={() => navigate('/ViewOrders')}
+                        onClick={() => navigate('/view-orders')}
                     >
                         View Orders
                     </button>
                     <button
                         className="w-full py-2 text-sm text-white bg-red-600 rounded hover:bg-red-500 transition"
-                        onClick={() => navigate('/SetUpPayments')}
+                        onClick={() => navigate('/setup-payments')}
                     >
                         Set Up Payment
                     </button>
                     <button
                         className="w-full py-2 text-sm text-white bg-sky-900 rounded hover:bg-sky-700 transition"
-                        onClick={() => navigate('/ManageProducts')}
+                        onClick={() => navigate('/manage-products')}
                     >
                         Manage Products
                     </button>
