@@ -1,0 +1,123 @@
+
+import User from '../Models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import { OAuth2Client } from 'google-auth-library';
+const client = new OAuth2Client('42432750324-hfjor6r90b0covqehpbc8643fivfk3h3.apps.googleusercontent.com');
+
+
+dotenv.config();
+
+
+
+export const createAccount = async (req, res) => {
+  const { name, email, authType, password } = req.body;
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  try {
+    const user = new User({ name, email, authType, password: hashedPassword });
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to create user', error: error.message });
+  }
+
+};
+
+// Define the function here
+async function verifyGoogleToken(token) {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: '42432750324-hfjor6r90b0covqehpbc8643fivfk3h3.apps.googleusercontent.com',
+  });
+  const payload = ticket.getPayload();
+
+  return {
+    googleId: payload.sub,
+    email: payload.email,
+    name: payload.name,
+    avatar: payload.picture,
+  };
+}
+
+// Your route can call it directly
+export const signupGoogle = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const googleData = await verifyGoogleToken(token);
+    let user = await User.findOne({ googleId: googleData.googleId });
+
+    if (!user) {
+      user = new User({
+        name: googleData.name,
+        authType: "google",
+        email: googleData.email,
+        googleId: googleData.googleId
+      });
+
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+      message: 'Login successful',
+      token: jwtToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ error: 'Invalid Google token' });
+  }
+};
+
+
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // 1. Find user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or passwordq' });
+    }
+
+    // 2. Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid email or passwordq1' });
+    }
+
+    // 3. Success
+
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token, user: { email: user.email } });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+
+
+export const getProfile = (req, res) => {
+  const { _id, name, email } = req.user;
+  res.json({ _id, name, email });
+  console.log('Full user:', req.user);
+}
+
+
+

@@ -1,0 +1,200 @@
+/* *,
+html {
+    box-sizing: border-box;
+}
+
+.App {
+    height: 100vh;
+    width: 100%;
+}
+
+.form-input {
+    width: 100%;
+    margin: 5px 0;
+}
+
+.form-input input {
+    height: 40px;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+.add-to-cart-btn {
+    background-color: red;
+    color: #ddd;
+    padding: 5px 10px;
+    cursor: pointer;
+
+}
+
+.main-nav-link {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+/*MEDIA QUERIES*/
+
+/* Tablet */
+/* @media(min-width: 481px) and (max-width: 768px) {
+
+    .search-bar {
+        text-align: center;
+    }
+
+    .search-bar input {
+        width: 90%;
+    }
+
+    .hero h1 {
+        font-size: 52px;
+    }
+
+    .hero p {
+        color: #fff;
+        font-size: 24px;
+    }
+
+    .product-card {
+        width: 50%;
+        padding: 10px 0;
+
+    }
+
+    .product-card img {
+        padding: 20px;
+    }
+
+    .register,
+    .login {
+        width: 70%;
+    }
+
+} */
+/* 
+Small Desktop
+@media(min-width: 769px) and (max-width: 1024px) {
+
+
+    .hamburger {
+        display: none;
+
+    }
+
+    .search-bar {
+        display: none;
+    }
+
+    .search-bar.show {
+        display: block;
+        text-align: center;
+    }
+
+    .search-bar input {
+        width: 70%;
+    }
+
+    .main-nav {
+        display: flex;
+    }
+
+    .search-btn {
+        display: block;
+        margin-left: auto;
+        padding: 0px 10px;
+    }
+
+    .hero h1 {
+        font-size: 52px;
+    }
+
+    .hero p {
+        color: #fff;
+        font-size: 24px;
+    }
+
+    .product-card {
+        width: 50%;
+        padding: 20PX 0;
+
+    }
+
+    .product-card img {
+        padding: 20px;
+    }
+
+    .register,
+    .login {
+        width: 60%;
+    }
+
+} */
+
+/* Large Desktop */
+/* @media(min-width: 1025px) {
+
+
+    .hamburger {
+        display: none;
+
+    }
+
+    .search-bar {
+        display: none;
+
+    }
+
+    .search-bar.show {
+        display: block;
+        text-align: center;
+    }
+
+    .search-bar input {
+        width: 70%;
+    }
+
+
+    .main-nav {
+        display: flex;
+        font-size: 20px;
+    }
+
+    .search-btn {
+        display: block;
+        margin-left: auto;
+        padding: 0px 10px;
+    }
+
+    .hero {
+        height: 460px;
+    }
+
+    .hero h1 {
+        font-size: 82px;
+    }
+
+    .hero p {
+        color: #fff;
+        font-size: 32px;
+    }
+
+    .hero .cta-button {
+        margin: 40px 0;
+        font-size: 32px;
+    }
+
+    .product-card {
+        width: 25%;
+        padding: 20px 0;
+
+    }
+
+    .product-card img {
+        padding: 20px;
+    }
+
+    .register,
+    .login {
+        width: 50%;
+    }
+}  */
