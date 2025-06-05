@@ -6,9 +6,6 @@ import UsersReviews from './Components/Site/UsersReviews.jsx';
 
 const Main = () => {
 
-
-
-
     return (
         <main>
             <Hero />

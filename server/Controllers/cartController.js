@@ -2,11 +2,9 @@ import Cart from "../Models/Cart.js";
 import Product from "../Models/Product.js";
 
 export const add = async (req, res) => {
-    // POST /api/cart/add
     try {
         const userId = req.user._id;
         const { productId, quantity } = req.body;
-
 
         if (!productId || !quantity || quantity < 1) {
             return res.status(400).json({ message: 'Invalid product or quantity' });
@@ -24,12 +22,15 @@ export const add = async (req, res) => {
 
         await cart.save();
 
-        res.json({ success: true, cart });
+        // Fetch full updated cart with populated product details
+        const updatedCart = await Cart.findOne({ userId }).populate('items.productId');
+
+        res.json({ items: updatedCart.items }); // ✅ return only items array
     } catch (err) {
         console.error('Add single item error:', err);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 export const fetchCart = async (req, res) => {
     try {

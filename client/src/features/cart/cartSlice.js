@@ -1,22 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../Components/utils/axios';
+import { toast } from 'react-toastify';
 
 //async thunk to add cart
-export const addToCart = createAsyncThunk('cart/addToCart', async ({ productId, quantity }) => {
-    const token = localStorage.getItem('token'); // Or however you store it
+export const addToCart = createAsyncThunk(
+    'cart/addToCart',
+    async ({ productId, quantity }) => {
+        try {
+            const token = localStorage.getItem("token");
 
-    const res = await API.post(
-        '/cart/add',
-        { productId, quantity },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            if (!token) {
+                toast.error('Not authenticated. Please log in.');
+            }
+            const res = await API.post(
+                '/cart/add',
+                { productId, quantity },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            toast.success('Item added to cart');
+            console.log(res.data.items);
+            return res.data.items;
+
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Error adding to cart');
+            return thunkAPI.rejectWithValue(err.response?.data);
         }
-    );
+    }
+);
 
-    return res.data.items;
-});
+
 
 
 // Async thunk to fetch cart

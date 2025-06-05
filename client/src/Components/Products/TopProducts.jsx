@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from "axios";
 import usePagination from '../utils/usePagination.jsx';
-import { addToCart } from '../utils/cartUtils.jsx';
+import { addToCart } from '../../features/cart/cartSlice.js';
 import API from '../utils/axios.jsx';
+import { useDispatch, useSelector } from 'react-redux';
 
 const TopProducts = () => {
     const [topProducts, setTopProducts] = useState([]);
@@ -32,7 +33,11 @@ const TopProducts = () => {
         }
 
     };
+    const dispatch = useDispatch();
 
+    const handleAddToCart = async (productId, quantity = 1) => {
+        dispatch(addToCart({ productId, quantity }));
+    };
 
     return (
         <section className="all-products p-8">
@@ -45,7 +50,7 @@ const TopProducts = () => {
                         <img className="w-80 h-60" src={product.productImage} alt={product.productName} />
                         <h3 className="text-md font-semibold">{product.productName}</h3>
                         <p className="text-sm ">Price: <label>₱{product.productPrice}</label></p>
-                        <button className="w-full my-2 p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 mx-auto" onClick={() => addToCart(product._id)}>ADD TO CART</button>
+                        <button className="w-full my-2 p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 mx-auto" onClick={() => handleAddToCart(product._id)}>ADD TO CART</button>
                     </div>
                 ))
                 }

@@ -4,12 +4,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from "axios";
 import usePagination from '../utils/usePagination.jsx';
-import { addToCart } from '../utils/cartUtils.jsx';
+import { addToCart } from '../../features/cart/cartSlice.js';
 import API from '../utils/axios.jsx';
+import { useDispatch, useSelector } from 'react-redux';
 
 const NewProducts = () => {
     const [products, setProducts] = useState([]);
-
 
     useEffect(() => {
         fetchProducts();
@@ -44,6 +44,11 @@ const NewProducts = () => {
         goToPage
     } = usePagination(newProducts, 12); // 
 
+    const dispatch = useDispatch();
+
+    const handleAddToCart = async (productId, quantity = 1) => {
+        dispatch(addToCart({ productId, quantity }));
+    };
     return (
 
         <section className="all-products p-8">
@@ -57,7 +62,7 @@ const NewProducts = () => {
                                 <span className="absolute -top-2 -left-2 text-sm bg-red-500  p-1 text-white rounded-md">NEW</span>
                                 <img className="w-full h-60" src={product.productImage} alt={product.productName} />
                                 <p className="text-sm">Price: <label>₱{product.productPrice}</label></p>
-                                <button className="w-full p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 my-2 mx-auto" onClick={() => addToCart(product._id)}>ADD TO CART</button>
+                                <button className="w-full p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 my-2 mx-auto" onClick={() => handleAddToCart(product._id)}>ADD TO CART</button>
                             </div>
                         }
 

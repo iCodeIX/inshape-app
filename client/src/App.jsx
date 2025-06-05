@@ -20,17 +20,23 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import OrdersSummary from './Components/Users/OrdersSummary.jsx';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCart } from './features/cart/cartSlice'; // adjust path as needed
 
 function App() {
   const location = useLocation();
-  const hiddenRoutes = ['/register', '/login', '/forgotPass', '/profile', '/cart',  '/all-products', '/new-products', '/top-products', '/manage-products', '/orders-summary', '/view-orders', '/setup-payments'];
+  const hiddenRoutes = ['/register', '/login', '/forgotPass', '/profile', '/cart', '/all-products', '/new-products', '/top-products', '/manage-products', '/orders-summary', '/view-orders', '/setup-payments'];
   const hideLayoutComponents = hiddenRoutes.includes(location.pathname);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
 
 
   useEffect(() => {
     document.title = "InShape StorePh";
-  }, []);
-
+    if (token) {
+      dispatch(fetchCart());
+    }
+  }, [token, dispatch]);
 
   return (
 

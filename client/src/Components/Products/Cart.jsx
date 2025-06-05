@@ -10,6 +10,7 @@ import { fetchCart, removeItem, updateQuantity } from '../../features/cart/cartS
 
 const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
     const cartItems = useSelector((state) => state.cart.items) || [];
+    console.log(cartItems);
 
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.productId.productPrice * item.quantity,
@@ -100,11 +101,11 @@ const Cart = ({ handleOpenCart, handleCloseCart }) => {
     // const [cartItems, setCartItems] = useState([]);
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
-    const cartItems = useSelector((state) => state.cart.items);
+    // const cartItems = useSelector((state) => state.cart.items);
 
-    useEffect(() => {
-        dispatch(fetchCart());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(fetchCart());
+    // }, [dispatch]);
 
     const handleQuantityChange = (productId, quantity) => {
         if (quantity >= 1) {
