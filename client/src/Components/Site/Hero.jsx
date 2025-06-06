@@ -15,7 +15,7 @@ const Hero = () => {
         >
             <h1 className="text-4xl font-bold mb-4 md:text-6xl">InShape Fitness Store</h1>
             <p className="text-xl mb-6 md:text-4xl">Power Up Your Workout with the Best Gears.</p>
-            <a onClick={()=> navigate("/AllProducts")} className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition md:w-50 md:text-lg">
+            <a onClick={()=> navigate("/all-products")} className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition md:w-50 md:text-lg">
                 Shop Now
             </a>
             <p className='mt-4'>or Visit our Store on</p>
