@@ -58,7 +58,7 @@ const NewProducts = () => {
                 {paginatedData.map((product, index) => (
                     <div key={product._id} className="product-card">
                         {isNewProduct(product.createdAt) &&
-                            <div className="relative flex flex-col gap-2 bg-white cursor-pointer border border-gray-200 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product.id}>
+                            <div className="relative flex flex-col gap-2 bg-white cursor-pointer border border-gray-200 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product._id}>
                                 <span className="absolute -top-2 -left-2 text-sm bg-red-500  p-1 text-white rounded-md">NEW</span>
                                 <img className="w-full h-60" src={product.productImage} alt={product.productName} />
                                 <p className="text-sm">Price: <label>₱{product.productPrice}</label></p>

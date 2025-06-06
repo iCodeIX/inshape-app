@@ -10,7 +10,6 @@ import { fetchCart, removeItem, updateQuantity } from '../../features/cart/cartS
 
 const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
     const cartItems = useSelector((state) => state.cart.items) || [];
-    console.log(cartItems);
 
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.productId.productPrice * item.quantity,
@@ -18,57 +17,53 @@ const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
     );
     return (
         <>
-
             {cartItems.length === 0 ? (
                 <div className="text-center text-gray-500 py-8">
                     <p className="text-lg">Your cart looks empty!</p>
                 </div>
             ) : (
-                <ul className="space-y-1 overflow-y-scroll h-70 lg:h-90">
-                    {cartItems.map((item) => (
+                <div className="w-full max-h-[80vh] bg-white rounded-lg shadow-lg flex flex-col">
 
-                        <li
-                            key={item._id}
-                            className="flex items-center justify-between p-4 bg-black-50 rounded-lg shadow-sm"
-                        >
-                            <div className="flex gap-4 w-full">
-                                <img
-                                    src={item.productId.productImage}
-                                    alt={item.productId.productName}
-                                    className="w-20 h-14 rounded-md shrink-0"
-                                />
-
-                                <div>
-                                    <p className="text-xs font-light uppercase">{item.productId.productName}</p>
-                                    <div className='mt-4'>
-                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity - 1)} className='border border-gray-300 h-7 w-7 mx-1 cursor-pointer'>-</button>
-                                        <input className="w-8 text-gray-500 text-sm" value={item.quantity} readOnly type='number'></input>
-                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity + 1)} className='border border-gray-300 h-7 w-7 mx-1 cursor-pointer'>+</button>
+                    {/* Scrollable items */}
+                    <div className="flex-1 overflow-y-auto px-4 space-y-2">
+                        {cartItems.map((item) => (
+                            <div key={item._id} className="flex items-center justify-between p-2 bg-white rounded shadow">
+                                <img src={item.productId.productImage} className="w-16 h-16 object-cover rounded" alt={item.productId.productName} />
+                                <div className="flex-1 ml-3">
+                                    <p className="text-sm font-medium">{item.productId.productName}</p>
+                                    <div className="flex items-center mt-1">
+                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity - 1)} className="border px-2">-</button>
+                                        <span className="px-3">{item.quantity}</span>
+                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity + 1)} className="border px-2">+</button>
                                     </div>
                                 </div>
-                                <div className='grow bg-red- text-end'>
-                                    <p className='text-semibold grow'>
-                                        ₱{item.productId.productPrice}
-                                    </p>
-                                    <button onClick={() => handleRemoveItem(item.productId._id)} className='underline text-sm cursor-pointer mt-4'>
-                                        Remove
-                                    </button>
+                                <div className="text-right text-sm">
+                                    <p>₱{item.productId.productPrice}</p>
+                                    <button onClick={() => handleRemoveItem(item.productId._id)} className="text-blue-500 text-xs underline mt-1">Remove</button>
                                 </div>
                             </div>
-                        </li>
-                    ))
-                    }
-                </ul>
-            )}
+                        ))}
+                    </div>
 
-            <div className='my-6 text-center'>Subtotal: ₱{subtotal}.00 </div>
-            <div className='absolute bottom-12 left-0 w-full p-4'>
-                <button onClick={() => {
-                    handleCloseCart()
-                    navigate('./orders-summary')
-                }} className='bg-sky-600 w-full h-10 text-white cursor-pointer hover:bg-sky-700'>Check out</button>
-            </div>
+                    {/* Footer */}
+                    <div className="p-4 border-t bg-white">
+                        <div className="font-semibold mb-2">Subtotal: ₱{subtotal}.00</div>
+                        <button
+                            onClick={() => {
+                                handleCloseCart();
+                                navigate('./orders-summary');
+                            }}
+                            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                        >
+                            Check out
+                        </button>
+                    </div>
+
+                </div>
+
+            )}
         </>
+
 
 
     )
@@ -121,7 +116,7 @@ const Cart = ({ handleOpenCart, handleCloseCart }) => {
         <div className="absolute top-0 right-0 h-[100vh] w-full md:max-w-lg bg-white shadow-lg z-50">
             <div onClick={handleCloseCart} className='absolute top-4 right-4 cursor-pointer'><img className='w-8 m-2' src={closeIcon}></img></div>
             <div className="py-4">
-                <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                <h1 className="text-2xl font-bold mb-4 flex items-center gap-2 px-2">
                     🛒 <span>Your Cart</span>
                 </h1>
 

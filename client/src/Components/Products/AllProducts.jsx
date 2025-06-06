@@ -62,7 +62,7 @@ const AllProducts = () => {
                     {filteredProducts.length > 0 ? (
                         <div className="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-12 mt-5">
                             {filteredProducts.map((product, index) => (
-                                <div className="flex flex-col gap-2 bg-white cursor-pointer border border-gray-300 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product.id}>
+                                <div className="flex flex-col gap-2 bg-white cursor-pointer border border-gray-300 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product._id}>
                                     <img className="w-80 h-60" src={product.productImage} alt={product.productName} />
                                     <h3 className="text-md font-semibold">{product.productName}</h3>
                                     <p className="text-sm">Price: <label>₱{product.productPrice}</label></p>
@@ -83,8 +83,8 @@ const AllProducts = () => {
                             <p className='text-center text-lg p-4'>Choose the best fits for your daily workout!</p>
                             <div className="grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-12 mt-5">
                                 {paginatedData.map((product, index) => (
-                                    <div className="flex flex-col gap-2 bg-white cursor-pointer border border-gray-200 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product.id}>
-                                        <img className="w-80 h-60" src={product.productImage} alt={product.productName} />
+                                    <div className="flex flex-col gap-2 bg-white cursor-pointer border border-gray-200 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product._id}>
+                                        <img className="w-80 h-60" src={product.productImage} alt={product.productName}  />
                                         <h3 className="text-md font-semibold">{product.productName}</h3>
                                         <p className="text-sm">Price: <label>₱{product.productPrice}</label></p>
                                         <button className="w-full p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 my-2 mx-auto" onClick={() => handleAddToCart(product._id)}>ADD TO CART</button>

@@ -59,9 +59,9 @@ const NoProfile = () => {
             <div className='text-center'>
                 <h3>It appears that you dont have an account.</h3>
                 <p>Try to</p>
-                <button className="bg-green-500 py-1 px-2 text-white rounded-sm cursor-pointer hover:bg-green-400" onClick={() => navigate('/Register', { replace: true })}>Register</button>
+                <button className="bg-green-500 py-1 px-2 text-white rounded-sm cursor-pointer hover:bg-green-400" onClick={() => navigate('/register', { replace: true })}>Register</button>
                 <p>or</p>
-                <button className="bg-blue-500 py-1 px-2 text-white rounded-sm cursor-pointer hover:bg-blue-400" onClick={() => navigate('/Login')}>Login</button>
+                <button className="bg-blue-500 py-1 px-2 text-white rounded-sm cursor-pointer hover:bg-blue-400" onClick={() => navigate('/login')}>Login</button>
             </div >
         </div>
 
