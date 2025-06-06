@@ -32,14 +32,14 @@ const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
                                 <div className="flex-1 ml-3">
                                     <p className="text-sm font-medium">{item.productId.productName}</p>
                                     <div className="flex items-center mt-1">
-                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity - 1)} className="border px-2">-</button>
+                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity - 1)} className="cursor-pointer border px-2">-</button>
                                         <span className="px-3">{item.quantity}</span>
-                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity + 1)} className="border px-2">+</button>
+                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity + 1)} className="cursor-pointer border px-2">+</button>
                                     </div>
                                 </div>
                                 <div className="text-right text-sm">
                                     <p>₱{item.productId.productPrice}</p>
-                                    <button onClick={() => handleRemoveItem(item.productId._id)} className="text-blue-500 text-xs underline mt-1">Remove</button>
+                                    <button onClick={() => handleRemoveItem(item.productId._id)} className="cursor-pointer text-blue-500 text-xs underline mt-1">Remove</button>
                                 </div>
                             </div>
                         ))}
@@ -53,7 +53,7 @@ const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
                                 handleCloseCart();
                                 navigate('./orders-summary');
                             }}
-                            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                            className="w-full cursor-pointer bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
                         >
                             Check out
                         </button>

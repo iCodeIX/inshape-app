@@ -11,7 +11,7 @@ const Hero = () => {
     return (
         <section
             style={{ backgroundImage: `url(${heroImage})` }}
-            className="bg-cover bg-center h-[100vh] flex flex-col items-center justify-center text-white text-center px-4"
+            className="bg-cover bg-center h-[90vh] flex flex-col items-center justify-center text-white text-center px-4"
         >
             <h1 className="text-4xl font-bold mb-4 md:text-6xl">InShape Fitness Store</h1>
             <p className="text-xl mb-6 md:text-4xl">Power Up Your Workout with the Best Gears.</p>
