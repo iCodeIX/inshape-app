@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { fetchCart } from '../utils/cartUtils';
 import closeIcon from '../../assets/close.png';
 import { useNavigate } from 'react-router-dom';
 const OrdersSummary = () => {

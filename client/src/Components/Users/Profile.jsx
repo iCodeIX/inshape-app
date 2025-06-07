@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// import './Profile.css'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Logout from './Logout'

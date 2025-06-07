@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react'
-// import './Cart.css';
-// import { fetchCart, removeFromCart } from '../utils/cartUtils.jsx';
+import React, { useEffect, useState } from 'react';
 import closeIcon from '../../assets/close.png';
-import OrdersSummary from '../Users/OrdersSummary.jsx';
-import Login from "../Users/Login.jsx";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCart, removeItem, updateQuantity } from '../../features/cart/cartSlice.js';
+import { removeItem, updateQuantity } from '../../features/cart/cartSlice.js';
 
 const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
     const cartItems = useSelector((state) => state.cart.items) || [];
@@ -32,9 +28,9 @@ const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
                                 <div className="flex-1 ml-3">
                                     <p className="text-sm font-medium">{item.productId.productName}</p>
                                     <div className="flex items-center mt-1">
-                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity - 1)} className="cursor-pointer border px-2">-</button>
+                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity - 1)} className="cursor-pointer w-8 h-8 border border-gray-300 text-gray-700 rounded hover:bg-gray-100">-</button>
                                         <span className="px-3">{item.quantity}</span>
-                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity + 1)} className="cursor-pointer border px-2">+</button>
+                                        <button onClick={() => updateQuantity(item.productId._id, item.quantity + 1)} className="cursor-pointer w-8 h-8 border border-gray-300 text-gray-700 rounded hover:bg-gray-100">+</button>
                                     </div>
                                 </div>
                                 <div className="text-right text-sm">
@@ -93,14 +89,9 @@ const NoProfile = ({ handleCloseCart }) => {
 }
 
 const Cart = ({ handleOpenCart, handleCloseCart }) => {
-    // const [cartItems, setCartItems] = useState([]);
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
-    // const cartItems = useSelector((state) => state.cart.items);
 
-    // useEffect(() => {
-    //     dispatch(fetchCart());
-    // }, [dispatch]);
 
     const handleQuantityChange = (productId, quantity) => {
         if (quantity >= 1) {

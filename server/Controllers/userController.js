@@ -4,11 +4,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { OAuth2Client } from 'google-auth-library';
-const client = new OAuth2Client('42432750324-hfjor6r90b0covqehpbc8643fivfk3h3.apps.googleusercontent.com');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 dotenv.config();
-
 
 
 export const createAccount = async (req, res) => {
@@ -30,7 +29,7 @@ export const createAccount = async (req, res) => {
 async function verifyGoogleToken(token) {
   const ticket = await client.verifyIdToken({
     idToken: token,
-    audience: '42432750324-hfjor6r90b0covqehpbc8643fivfk3h3.apps.googleusercontent.com',
+    audience: process.env.GOOGLE_CLIENT_ID,
   });
   const payload = ticket.getPayload();
 
@@ -88,28 +87,36 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Find user by email
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or passwordq' });
+      return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // 2. Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid email or passwordq1' });
+
+      return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // 3. Success
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Login successful', token, user: { email: user.email } });
+    console.log(email, password);
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: { email: user.email },
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 
 
 

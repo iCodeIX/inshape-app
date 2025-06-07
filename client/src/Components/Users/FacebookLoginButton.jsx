@@ -4,7 +4,7 @@ const FacebookLoginButton = () => {
     useEffect(() => {
         window.fbAsyncInit = function () {
             window.FB.init({
-                appId: '674665258815332',
+                appId: import.meta.env.VITE_FB_APP_ID,
                 cookie: true,
                 xfbml: true,
                 version: 'v19.0'  // or latest

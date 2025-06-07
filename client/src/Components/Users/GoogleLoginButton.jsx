@@ -10,7 +10,6 @@ export default function GoogleLoginButton() {
 
         try {
             const res = await API.post('/auth/googlesignup', { token });
-            console.log('✅ Login success:', res.data);
             localStorage.setItem('token', res.data.token);
             navigate('/Profile');
         } catch (err) {
@@ -21,7 +20,7 @@ export default function GoogleLoginButton() {
     useEffect(() => {
         /* global google */
         google.accounts.id.initialize({
-            client_id: '42432750324-hfjor6r90b0covqehpbc8643fivfk3h3.apps.googleusercontent.com',
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
             callback: handleCredentialResponse,
         });
 

@@ -10,7 +10,7 @@ async function connection() {
         console.log("connected to database");
 
     } catch (err) {
-        console.log("NOT SONNECTED TO DATABASE");
+        console.log("NOT CONNECTED TO DATABASE");
     }
 }
 
