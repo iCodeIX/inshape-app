@@ -15,15 +15,23 @@ export const createAccount = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  try {
-    const user = new User({ name, email, authType, password: hashedPassword });
-    await user.save();
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json({ message: 'Failed to create user', error: error.message });
+  const user = await User.findOne({ email });
+  if (user) {
+    return res.status(400).json({ message: 'Email address is already used!' });
+  } else {
+    try {
+      const user = new User({ name, email, authType, password: hashedPassword });
+      await user.save();
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(400).json({ message: 'Failed to create user', error: error.message });
+
+    }
   }
 
-};
+}
+
+
 
 // Define the function here
 async function verifyGoogleToken(token) {

@@ -14,11 +14,12 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
-
+    const [errorEmail, setErrorEmail] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (password == confirmPassword) {
+            setError("");
             try {
                 const res = await API.post('/auth/register', {
                     name: firstName + " " + lastName,
@@ -27,15 +28,15 @@ const Register = () => {
                     password
                 });
                 console.log("User data", res.data);
+                navigate("/login");
             }
 
             catch (err) {
-                console.error('Register error:', err.response?.data || err.message);
+                setErrorEmail(err.response?.data?.message);
             }
         } else {
             setError("Passwords not match!")
         }
-
 
     }
     return (
@@ -74,6 +75,10 @@ const Register = () => {
                         />
                     </div>
                     <div>
+                        {errorEmail && (<div className='text-sm text-centet text-red-700 font-semibold'>
+                            {errorEmail}
+                        </div>)}
+
                         <input
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
