@@ -31,11 +31,11 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+            <div className="bg-white p-2 rounded-lg shadow-md w-full max-w-md">
                 <p className="text-center text-gray-700 mb-6">
                     Login to your existing account and enjoy shopping with fantastic vouchers!
                 </p>
-                {error && (<div className='text-center m-2 p-2 bg-gray-200 rounded text-sm text-red-700'>
+                {error && (<div className='text-center font-semibold my-2 p-2 bg-gray-200 rounded text-sm text-red-700'>
                     {error}
                 </div>)}
                 <form onSubmit={handleLogin} className="space-y-4">

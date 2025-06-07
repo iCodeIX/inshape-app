@@ -20,7 +20,7 @@ API.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             localStorage.removeItem('token');
             console.warn('Token expired or unauthorized — logging out');
-            window.location.href = '/login'; // 🔁 Redirect if needed
+            // window.location.href = '/login'; // 🔁 Redirect if needed
         }
         return Promise.reject(error);
     }
