@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import closeIcon from '../../assets/close.png';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPaymentMethods } from '../../features/payment/paymentSlice';
 
 const OrdersSummary = () => {
 
     const cartItems = useSelector((state) => state.cart.items);
+    const payments = useSelector((state) => state.payment.items) || [];
     const navigate = useNavigate();
-    useEffect(() => {
+    const token = localStorage.getItem("token");
+    const dispatch = useDispatch();
+    const [selectedMethod, setSelectedMethod] = useState(null);
 
-    }, []);
+    useEffect(() => {
+        if (token) {
+            dispatch(fetchPaymentMethods());
+        }
+    }, [token, dispatch])
+
 
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.productId.productPrice * item.quantity,
         0
     );
-
-    const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState("Select an option");
-
-    const handleSelect = (option) => {
-        setSelected(option);
-        setIsOpen(false);
-    };
-
-    const options = ["Gcash", "Paymaya"];
 
 
     return (
@@ -33,7 +32,7 @@ const OrdersSummary = () => {
             <div onClick={() => navigate("/all-products")} className='absolute right-0 top-0 w-8 m-4 cursor-pointer'>
                 <img src={closeIcon}></img>
             </div>
-            <div className="bg-gray-100 sm:w-1/2 mb-4 mx-6 rounded-lg shadow text-sm font-mono p-4">
+            <div className="bg-gray-200 sm:w-1/2 mb-4 mx-6 rounded-lg shadow text-sm font-mono p-4">
                 <p className="text-center text-red-500 font-bold text-base mb-4">ORDER SUMMARY</p>
 
                 <ul className="divide-y divide-dashed divide-gray-300 mb-4">
@@ -72,71 +71,53 @@ const OrdersSummary = () => {
             </div>
             <div className="sm:w-1/2 px-4 bg-white rounded-lg shadow-md mx-auto space-y-4 font-sans text-sm">
                 <div className='bg-gray-200 p-2'>
-                    <div className='text-center'> To use Vouchers/Discounts and Save Payment Details<p onClick={() => navigate("/register")} className=' text-center font-semibold underline text-green-500 cursor-pointer'>CREATE AN ACCOUNT</p></div>
+                    <div className='text-center'>NO PAYMENT METHOD?<p onClick={() => navigate("/setup-payments")} className=' text-center font-semibold underline text-green-500 cursor-pointer'>ADD PAYMENT METHOD </p></div>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-800">Payer Info</h2>
-                <p className="text-gray-600 mb-2">Fill in with the correct information.</p>
+                <div className="bg-white p-4 rounded-lg shadow">
 
-                <div className="space-y-3 flex flex-col py-2">
-                    <input
-                        type="text"
-                        placeholder="First Name"
-                        className="sm:w-full border border-gray-300 rounded-md sm:px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Middle Initial"
-                        className="sm:w-full border border-gray-300 rounded-md sm:px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Last Name"
-                        className="sm:w-full border border-gray-300 rounded-md sm:px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email Address"
-                        className="sm:w-full border border-gray-300 rounded-md sm:px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                    />
-                </div>
-
-                <div>
-                    <p className="mt-4 text-gray-700 font-medium">Payment Method</p>
-                    <div className="relative mt-2">
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="w-full text-left bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
+                    {/* Dropdown menu */}
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Choose Payment Method
+                        </label>
+                        <select
+                            onChange={(e) => {
+                                const method = payments.find((p) => p._id === e.target.value);
+                                setSelectedMethod(method || null);
+                            }}
+                            defaultValue=""
+                            className="w-full p-2 border rounded"
                         >
-                            {selected}
-                        </button>
-                        {isOpen && (
-                            <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-                                {options.map((option, index) => (
-                                    <div
-                                        key={index}
-                                        onClick={() => handleSelect(option)}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                                    >
-                                        {option}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                            <option value="" disabled>
+                                -- Choose Payment Method --
+                            </option>
+                            {payments.map((method) => (
+                                <option key={method._id} value={method._id}>
+                                    {method.paymentMethod} - {method.payerNumber}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                </div>
 
-                <div>
-                    <p className="text-gray-700 font-medium mt-4">Use the one that will send the payment:</p>
-                    <input
-                        type="number"
-                        placeholder="CP number"
-                        className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                    />
+                    {/* Show details */}
+                    {selectedMethod && (
+                        <div className="space-y-2 text-sm text-gray-700">
+                            <p><strong>First Name:</strong> {selectedMethod.firstName}</p>
+                            <p><strong>Middle Initial:</strong> {selectedMethod.middleInitial}</p>
+                            <p><strong>Last Name:</strong> {selectedMethod.lastName}</p>
+                            <p><strong>Email:</strong> {selectedMethod.email}</p>
+                            <p><strong>Payment Method:</strong> {selectedMethod.paymentMethod}</p>
+                            <p><strong>Payer Number:</strong> {selectedMethod.payerNumber}</p>
+                        </div>
+                    )}
                 </div>
-
-                <button className="cursor-pointer w-full my-4 bg-sky-600 text-white font-semibold py-2 rounded-md hover:bg-sky-700 transition">
+                <button className='cursor-pointer p-2 w-full h-10 bg-green-400 hover:bg-green-600 text-white'>
                     PROCEED
                 </button>
+
+
+
             </div>
 
         </div>
