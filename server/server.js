@@ -3,6 +3,7 @@ import cors from 'cors';
 import authRoutes from './Routes/authRoutes.js';
 import productRoutes from "./Routes/productRoutes.js";
 import cartRoutes from "./Routes/cartRoutes.js";
+import paymentRoutes from "./Routes/paymentRoutes.js";
 import connection from './Config/connection.js';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Serve static files from the Vite build
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));

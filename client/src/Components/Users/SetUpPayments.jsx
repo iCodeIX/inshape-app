@@ -1,35 +1,29 @@
 import React, { useState } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addPaymentMethod, fetchPaymentMethods, deletePaymentMethod, updatePaymentMethod } from '../../features/payment/paymentSlice';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 const SetUpPayments = () => {
-    const [savedMethods, setSavedMethods] = useState([
-        {
-            id: 1,
-            paymentMethod: 'GCash',
-            firstName: 'John',
-            middleInitials: 'A.',
-            lastName: 'Doe',
-            email: 'john@example.com',
-            cellphone: '09171234567',
-        },
-        {
-            id: 2,
-            paymentMethod: 'PayMaya',
-            firstName: 'Jane',
-            middleInitials: 'B.',
-            lastName: 'Smith',
-            email: 'jane@example.com',
-            cellphone: '09987654321',
-        },
-    ]);
+    const payments = useSelector((state) => state.payment.items) || [];
+    const dispatch = useDispatch();
+    const token = localStorage.getItem("token");
+    const [editingId, setEditingId] = useState(null);
 
     const [formData, setFormData] = useState({
         firstName: '',
-        middleInitials: '',
+        middleInitial: '',
         lastName: '',
         email: '',
-        paymentMethod: 'GCash',
-        cellphone: '',
+        payerNumber: '',
+        paymentMethod: 'GCash'
     });
+
+    useEffect(() => {
+        if (token) {
+            dispatch(fetchPaymentMethods());
+        }
+    }, [token, dispatch])
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,32 +35,43 @@ const SetUpPayments = () => {
 
     const handleEdit = (method) => {
         setFormData({
+            _id: method._id, // important for identifying update
             firstName: method.firstName,
-            middleInitials: method.middleInitials,
+            middleInitial: method.middleInitial,
             lastName: method.lastName,
             email: method.email,
+            payerNumber: method.payerNumber,
             paymentMethod: method.paymentMethod,
-            cellphone: method.cellphone,
         });
     };
+
 
     const handleNewPayment = () => {
         setFormData({
             firstName: '',
-            middleInitials: '',
+            middleInitial: '',
             lastName: '',
             email: '',
-            paymentMethod: 'GCash',
-            cellphone: '',
+            payerNumber: '',
+            paymentMethod: 'GCash'
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Saved/Updated Payment Info:', formData);
-        alert('Payment details saved!');
-        // Add or update logic can go here
+        try {
+            if (formData._id) {
+                await dispatch(updatePaymentMethod({ id: formData._id, data: formData })).unwrap();
+            } else {
+                await dispatch(addPaymentMethod(formData)).unwrap();
+            }
+            await dispatch(fetchPaymentMethods()).unwrap();
+            handleNewPayment(); // Reset the form
+        } catch (err) {
+            toast.error(err || "An error occurred");
+        }
     };
+
 
     return (
         <div className="max-w-5xl mx-auto p-6">
@@ -74,26 +79,36 @@ const SetUpPayments = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* LEFT: Saved Payment Methods */}
-                <div className="bg-gray-50 p-4 rounded-lg shadow">
+                <div className="bg-gray-50 p-2 rounded-lg shadow">
                     <h3 className="text-lg font-semibold mb-4">Saved Payment Methods</h3>
-                    {savedMethods.length === 0 ? (
+                    {payments.length === 0 ? (
                         <p className="text-gray-500">No saved methods yet.</p>
                     ) : (
                         <ul className="space-y-4">
-                            {savedMethods.map((method) => (
+                            {payments.map((method) => (
                                 <li
-                                    key={method.id}
-                                    className="p-4 border rounded-lg flex justify-between items-center"
+                                    key={method._id}
+                                    className="p-2 border rounded-lg flex gap-4 items-center"
                                 >
                                     <div>
                                         <p className="font-medium">{method.paymentMethod}</p>
-                                        <p className="text-sm text-gray-600">{method.cellphone}</p>
+                                        <p className="text-sm text-gray-600">{method.payerNumber}</p>
                                     </div>
                                     <button
                                         className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-500 transition"
                                         onClick={() => handleEdit(method)}
                                     >
-                                        Edit Details
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-500 transition"
+                                        onClick={() => {
+                                            if (window.confirm("Are you sure you want to delete this payment method?")) {
+                                                dispatch(deletePaymentMethod(method._id));
+                                            }
+                                        }}
+                                    >
+                                        Delete
                                     </button>
                                 </li>
                             ))}
@@ -128,11 +143,11 @@ const SetUpPayments = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Middle Initials</label>
+                                <label className="block text-sm font-medium text-gray-700">Middle Initial</label>
                                 <input
                                     type="text"
-                                    name="middleInitials"
-                                    value={formData.middleInitials}
+                                    name="middleInitial"
+                                    value={formData.middleInitial}
                                     onChange={handleChange}
                                     className="mt-1 w-full p-2 border rounded"
                                 />
@@ -182,8 +197,8 @@ const SetUpPayments = () => {
                             </label>
                             <input
                                 type="tel"
-                                name="cellphone"
-                                value={formData.cellphone}
+                                name="payerNumber"
+                                value={formData.payerNumber}
                                 onChange={handleChange}
                                 className="mt-1 w-full p-2 border rounded"
                                 required

@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, updateQuantity } from '../../features/cart/cartSlice.js';
 
-const DisplayCart = ({ updateQuantity, handleRemoveItem }) => {
+const DisplayCart = ({ updateQuantity, handleCloseCart, handleRemoveItem }) => {
     const cartItems = useSelector((state) => state.cart.items) || [];
-
+    const navigate = useNavigate();
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.productId.productPrice * item.quantity,
         0
@@ -111,7 +111,7 @@ const Cart = ({ handleOpenCart, handleCloseCart }) => {
                     🛒 <span>Your Cart</span>
                 </h1>
 
-                {token ? <DisplayCart updateQuantity={handleQuantityChange} handleRemoveItem={handleRemoveItem} /> : <NoProfile handleCloseCart={handleCloseCart} />}
+                {token ? <DisplayCart handleCloseCart={handleCloseCart} updateQuantity={handleQuantityChange} handleRemoveItem={handleRemoveItem} /> : <NoProfile handleCloseCart={handleCloseCart} />}
             </div>
         </div>
 

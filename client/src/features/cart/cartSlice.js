@@ -28,18 +28,15 @@ export const addToCart = createAsyncThunk(
 
         } catch (err) {
             toast.error(err.response?.data?.message || 'Error adding to cart');
-            return thunkAPI.rejectWithValue(err.response?.data);
         }
     }
 );
 
 
-
-
 // Async thunk to fetch cart
 export const fetchCart = createAsyncThunk('cart/fetchCart', async () => {
-    const res = await API.get('/cart/fetchCart');
-    return res.data.items; ``
+    const res = await API.get('/cart/fetch-cart');
+    return res.data.items;
 });
 
 // Async thunk to update quantity
@@ -71,6 +68,7 @@ export const removeItem = createAsyncThunk(
         }
     }
 );
+
 
 const cartSlice = createSlice({
     name: 'cart',

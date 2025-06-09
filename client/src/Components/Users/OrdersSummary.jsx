@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import closeIcon from '../../assets/close.png';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 const OrdersSummary = () => {
 
-    const [cartItems, setCartItems] = useState([]);
+    const cartItems = useSelector((state) => state.cart.items);
     const navigate = useNavigate();
     useEffect(() => {
-        const items = getCart();
-        setCartItems(items);
+
     }, []);
 
     const subtotal = cartItems.reduce(
-        (sum, item) => sum + item.productPrice * item.quantity,
+        (sum, item) => sum + item.productId.productPrice * item.quantity,
         0
     );
 
@@ -29,7 +30,7 @@ const OrdersSummary = () => {
     return (
         <div className='bg-white flex flex-col h-full w-full top-0 z-50 sm:p-12 sm:flex-row absolute'>
 
-            <div onClick={() => navigate("/AllProducts")} className='absolute right-0 top-0 w-8 m-4 cursor-pointer'>
+            <div onClick={() => navigate("/all-products")} className='absolute right-0 top-0 w-8 m-4 cursor-pointer'>
                 <img src={closeIcon}></img>
             </div>
             <div className="bg-gray-100 sm:w-1/2 mb-4 mx-6 rounded-lg shadow text-sm font-mono p-4">
@@ -39,13 +40,13 @@ const OrdersSummary = () => {
                     {cartItems.map((item, index) => (
                         <li key={index} className="py-2 flex justify-between items-start">
                             <div className="flex-1">
-                                <p className="text-gray-700">{item.productName}</p>
+                                <p className="text-gray-700">{item.productId.productName}</p>
                                 <p className="text-xs text-gray-500">
-                                    ₱{item.productPrice} x {item.quantity}
+                                    ₱{item.productId.productPrice} x {item.quantity}
                                 </p>
                             </div>
                             <div className="text-right text-gray-800 font-semibold min-w-[60px]">
-                                ₱{item.productPrice * item.quantity}
+                                ₱{item.productId.productPrice * item.quantity}
                             </div>
                         </li>
                     ))}
@@ -71,7 +72,7 @@ const OrdersSummary = () => {
             </div>
             <div className="sm:w-1/2 px-4 bg-white rounded-lg shadow-md mx-auto space-y-4 font-sans text-sm">
                 <div className='bg-gray-200 p-2'>
-                    <p className='text-center'> To use Vouchers/Discounts and Save Payment Details<div onClick={() => navigate("/Register")} className=' text-center font-semibold underline text-green-500 cursor-pointer'>CREATE AN ACCOUNT</div></p>
+                    <div className='text-center'> To use Vouchers/Discounts and Save Payment Details<p onClick={() => navigate("/register")} className=' text-center font-semibold underline text-green-500 cursor-pointer'>CREATE AN ACCOUNT</p></div>
                 </div>
                 <h2 className="text-lg font-semibold text-gray-800">Payer Info</h2>
                 <p className="text-gray-600 mb-2">Fill in with the correct information.</p>

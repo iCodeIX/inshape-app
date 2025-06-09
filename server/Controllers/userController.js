@@ -1,4 +1,3 @@
-
 import User from '../Models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -114,7 +113,6 @@ export const loginUser = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    console.log(email, password);
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -131,7 +129,6 @@ export const loginUser = async (req, res) => {
 export const getProfile = (req, res) => {
   const { _id, name, email } = req.user;
   res.json({ _id, name, email });
-  console.log('Full user:', req.user);
 }
 
 

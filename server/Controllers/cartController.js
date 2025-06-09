@@ -1,5 +1,5 @@
 import Cart from "../Models/Cart.js";
-import Product from "../Models/Product.js";
+
 
 export const add = async (req, res) => {
     try {
@@ -103,3 +103,5 @@ export const updateQuantity = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
