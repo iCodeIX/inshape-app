@@ -22,7 +22,7 @@ const sampleProducts = {
 };
 
 const ViewOrders = () => {
-    const [activeTab, setActiveTab] = useState('shipping');
+    const [activeTab, setActiveTab] = useState('placed');
 
     const handleCancelOrder = (productId) => {
         console.log(`Order ${productId} cancelled.`);

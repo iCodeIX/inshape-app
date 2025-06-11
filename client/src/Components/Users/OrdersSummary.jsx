@@ -13,11 +13,35 @@ const OrdersSummary = () => {
     const dispatch = useDispatch();
     const [selectedMethod, setSelectedMethod] = useState(null);
 
+    const [showModal, setShowModal] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+
     useEffect(() => {
         if (token) {
             dispatch(fetchPaymentMethods());
         }
     }, [token, dispatch])
+
+
+    const handleProceed = () => {
+        setShowModal(true);
+    }
+    const handleCancel = () => {
+        setShowModal(false);
+    };
+
+    const handlePaymentDone = () => {
+        // Add logic to verify or move to next step
+        setShowModal(false);
+        setShowConfirmationModal(true);
+        // navigate("/view-orders");
+    };
+
+    const closeConfirmation = () => {
+        setShowConfirmationModal(false);
+        navigate("/view-orders");
+    };
 
 
     const subtotal = cartItems.reduce(
@@ -111,10 +135,77 @@ const OrdersSummary = () => {
                             <p><strong>Payer Number:</strong> {selectedMethod.payerNumber}</p>
                         </div>
                     )}
+                    <div className="p-6">
+                        <button
+                            onClick={handleProceed}
+                            className="bg-green-600 w-full text-white px-4 py-2 rounded hover:bg-blue-500"
+                        >
+                            Proceed to Pay
+                        </button>
+                        {/* main modal */}
+                        {showModal && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                                <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg relative">
+                                    <h2 className="text-xl font-bold mb-4">Shop Payment Details</h2>
+
+                                    <div className="mb-4">
+                                        <p className="font-semibold">GCash:</p>
+                                        <ul className="ml-4 list-disc">
+                                            <li>0917-123-4567 (Shop A)</li>
+                                            <li>0917-890-1234 (Shop B)</li>
+                                        </ul>
+
+                                        <p className="font-semibold mt-4">PayMaya:</p>
+                                        <ul className="ml-4 list-disc">
+                                            <li>0922-456-7890 (Shop A)</li>
+                                            <li>0922-111-2222 (Shop B)</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="text-sm text-red-600 mb-4">
+                                        ⚠️ Please complete your payment before clicking "Payment Done".
+                                    </div>
+
+                                    <div className="flex justify-end space-x-3">
+                                        <button
+                                            onClick={handleCancel}
+                                            className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={handlePaymentDone}
+                                            className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-500"
+                                        >
+                                            Payment Done
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+
+                        {/* Confirmation Modal */}
+                        {showConfirmationModal && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div className="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
+                                    <h3 className="text-lg font-semibold mb-3 text-center">Payment marked as done!</h3>
+                                    <p className="text-sm text-gray-700 mb-4 text-center">
+                                        Check <strong>PLACED</strong> items. Once the item is shipped, you can't cancel the order!
+                                    </p>
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={closeConfirmation}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+                                        >
+                                            OK
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <button className='cursor-pointer p-2 w-full h-10 bg-green-400 hover:bg-green-600 text-white'>
-                    PROCEED
-                </button>
 
 
 

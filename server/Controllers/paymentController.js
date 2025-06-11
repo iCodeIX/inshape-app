@@ -1,4 +1,10 @@
 import Payment from "../Models/Payment.js";
+import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const PAYMONGO_SECRET_KEY = process.env.PAYMONGO_SECRET_KEY;
+
 
 export const addPaymentMethod = async (req, res) => {
     try {
@@ -88,5 +94,39 @@ export const updatePaymentMethod = async (req, res) => {
     } catch (error) {
         console.error("Error updating payment method:", error);
         res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+export const createGCashSource = async (req, res) => {
+    try {
+        const response = await axios.post(
+            'https://api.paymongo.com/v1/sources',
+            {
+                data: {
+                    attributes: {
+                        amount: 10000, // PHP 100.00 in centavos
+                        redirect: {
+                            success: 'http://localhost:3000/payment-success',
+                            failed: 'http://localhost:3000/payment-failed'
+                        },
+                        type: 'gcash',
+                        currency: 'PHP'
+                    }
+                }
+            },
+            {
+                headers: {
+                    Authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY + ':').toString('base64')}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        const redirectUrl = response.data.data.attributes.redirect.checkout_url;
+        res.json({ redirectUrl });
+    } catch (err) {
+        console.error('PayMongo error:', err);
+        res.status(500).json({ message: 'Failed to create GCash payment' });
     }
 };
