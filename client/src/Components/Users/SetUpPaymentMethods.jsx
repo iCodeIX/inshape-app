@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addPaymentMethod, fetchPaymentMethods, deletePaymentMethod, updatePaymentMethod } from '../../features/payment/paymentSlice';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-const SetUpPayments = () => {
+
+const SetUpPaymentMethods = () => {
     const payments = useSelector((state) => state.payment.items) || [];
     const dispatch = useDispatch();
     const token = localStorage.getItem("token");
-    const [editingId, setEditingId] = useState(null);
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -165,7 +165,6 @@ const SetUpPayments = () => {
                                 required
                             />
                         </div>
-
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Email</label>
                             <input
@@ -218,4 +217,4 @@ const SetUpPayments = () => {
     );
 };
 
-export default SetUpPayments;
+export default SetUpPaymentMethods;

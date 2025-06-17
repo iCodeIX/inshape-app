@@ -25,6 +25,10 @@ const OrdersSummary = () => {
 
 
     const handleProceed = () => {
+        if (!selectedMethod) {
+            alert("Please select a payment method first.");
+            return;
+        }
         setShowModal(true);
     }
     const handleCancel = () => {
@@ -32,6 +36,7 @@ const OrdersSummary = () => {
     };
 
     const handlePaymentDone = () => {
+
         // Add logic to verify or move to next step
         setShowModal(false);
         setShowConfirmationModal(true);
@@ -130,6 +135,7 @@ const OrdersSummary = () => {
                             <p><strong>First Name:</strong> {selectedMethod.firstName}</p>
                             <p><strong>Middle Initial:</strong> {selectedMethod.middleInitial}</p>
                             <p><strong>Last Name:</strong> {selectedMethod.lastName}</p>
+                            <p><strong>Delivery Adress:</strong>{selectedMethod.addressLine2} {selectedMethod.addressLine1} {selectedMethod.postalCode}</p>
                             <p><strong>Email:</strong> {selectedMethod.email}</p>
                             <p><strong>Payment Method:</strong> {selectedMethod.paymentMethod}</p>
                             <p><strong>Payer Number:</strong> {selectedMethod.payerNumber}</p>
@@ -151,14 +157,12 @@ const OrdersSummary = () => {
                                     <div className="mb-4">
                                         <p className="font-semibold">GCash:</p>
                                         <ul className="ml-4 list-disc">
-                                            <li>0917-123-4567 (Shop A)</li>
-                                            <li>0917-890-1234 (Shop B)</li>
+                                            <li>0917-123-4567 (GCASH ONLY)</li>
                                         </ul>
 
                                         <p className="font-semibold mt-4">PayMaya:</p>
                                         <ul className="ml-4 list-disc">
-                                            <li>0922-456-7890 (Shop A)</li>
-                                            <li>0922-111-2222 (Shop B)</li>
+                                            <li>0922-456-7890 (PAYMAYA ONLY)</li>
                                         </ul>
                                     </div>
 

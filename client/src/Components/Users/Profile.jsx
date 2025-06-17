@@ -32,9 +32,15 @@ const UserProfile = ({ name, id, email }) => {
                     </button>
                     <button
                         className="w-full py-2 text-sm text-white bg-red-600 rounded hover:bg-red-500 transition"
-                        onClick={() => navigate('/setup-payments')}
+                        onClick={() => navigate('/setup-payment-methods')}
                     >
                         Set Up Payment
+                    </button>
+                    <button
+                        className="w-full py-2 text-sm text-white bg-red-600 rounded hover:bg-red-500 transition"
+                        onClick={() => navigate('/setup-shipping-address')}
+                    >
+                        Set Up Address
                     </button>
                     <button
                         className="w-full py-2 text-sm text-white bg-sky-900 rounded hover:bg-sky-700 transition"

@@ -3,8 +3,6 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const PAYMONGO_SECRET_KEY = process.env.PAYMONGO_SECRET_KEY;
-
 
 export const addPaymentMethod = async (req, res) => {
     try {

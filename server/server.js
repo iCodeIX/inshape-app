@@ -4,6 +4,7 @@ import authRoutes from './Routes/authRoutes.js';
 import productRoutes from "./Routes/productRoutes.js";
 import cartRoutes from "./Routes/cartRoutes.js";
 import paymentRoutes from "./Routes/paymentRoutes.js";
+import addressRoutes from "./Routes/addressRoutes.js";
 import connection from './Config/connection.js';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -37,6 +38,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/address', addressRoutes);
 
 // Serve static files from the Vite build
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
