@@ -135,7 +135,6 @@ const OrdersSummary = () => {
                             <p><strong>First Name:</strong> {selectedMethod.firstName}</p>
                             <p><strong>Middle Initial:</strong> {selectedMethod.middleInitial}</p>
                             <p><strong>Last Name:</strong> {selectedMethod.lastName}</p>
-                            <p><strong>Delivery Adress:</strong>{selectedMethod.addressLine2} {selectedMethod.addressLine1} {selectedMethod.postalCode}</p>
                             <p><strong>Email:</strong> {selectedMethod.email}</p>
                             <p><strong>Payment Method:</strong> {selectedMethod.paymentMethod}</p>
                             <p><strong>Payer Number:</strong> {selectedMethod.payerNumber}</p>
