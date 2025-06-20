@@ -3,23 +3,28 @@ import closeIcon from '../../assets/close.png';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPaymentMethods } from '../../features/payment/paymentSlice';
+import { fetchShippingAddress } from '../../features/shippingAddress/shippingAddressSlice';
 
 const OrdersSummary = () => {
 
     const cartItems = useSelector((state) => state.cart.items);
     const payments = useSelector((state) => state.payment.items) || [];
+    const shippingAddress = useSelector((state) => state.shippingAddress.items) || [];
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
     const [selectedMethod, setSelectedMethod] = useState(null);
+    const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
 
     const [showModal, setShowModal] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
+    console.log(shippingAddress);
 
     useEffect(() => {
         if (token) {
             dispatch(fetchPaymentMethods());
+            dispatch(fetchShippingAddress());
         }
     }, [token, dispatch])
 
@@ -27,6 +32,9 @@ const OrdersSummary = () => {
     const handleProceed = () => {
         if (!selectedMethod) {
             alert("Please select a payment method first.");
+            return;
+        } else if (!selectedShippingAddress) {
+            alert("Please select a shipping address first.");
             return;
         }
         setShowModal(true);
@@ -47,7 +55,6 @@ const OrdersSummary = () => {
         setShowConfirmationModal(false);
         navigate("/view-orders");
     };
-
 
     const subtotal = cartItems.reduce(
         (sum, item) => sum + item.productId.productPrice * item.quantity,
@@ -99,16 +106,16 @@ const OrdersSummary = () => {
                 </div>
             </div>
             <div className="sm:w-1/2 px-4 bg-white rounded-lg shadow-md mx-auto space-y-4 font-sans text-sm">
-                <div className='bg-gray-200 p-2'>
-                    <div className='text-center'>NO PAYMENT METHOD?<p onClick={() => navigate("/setup-payments")} className=' text-center font-semibold underline text-green-500 cursor-pointer'>ADD PAYMENT METHOD </p></div>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow">
 
+
+
+                <div className="bg-white p-4 rounded-lg shadow">
+                    <p onClick={() => navigate("/setup-payment-methods")} className='text-sm font-semibold underline text-green-500 cursor-pointer'>No Payment Method? Click Here!</p>
                     <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
                     {/* Dropdown menu */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Choose Payment Method
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-red-500">
+                            ***Choose Payment Method
                         </label>
                         <select
                             onChange={(e) => {
@@ -128,7 +135,6 @@ const OrdersSummary = () => {
                             ))}
                         </select>
                     </div>
-
                     {/* Show details */}
                     {selectedMethod && (
                         <div className="space-y-2 text-sm text-gray-700">
@@ -138,6 +144,42 @@ const OrdersSummary = () => {
                             <p><strong>Email:</strong> {selectedMethod.email}</p>
                             <p><strong>Payment Method:</strong> {selectedMethod.paymentMethod}</p>
                             <p><strong>Payer Number:</strong> {selectedMethod.payerNumber}</p>
+                        </div>
+                    )}
+
+                    {/* Dropdown menu */}
+                    <div className="mb-4 mt-4">
+                        <p onClick={() => navigate("/setup-shipping-address")} className='text-sm font-semibold underline text-green-500 cursor-pointer'>No Shipping Address? Click Here!</p>
+                        <label className="block text-sm font-medium text-gray-700 mb-1 text-red-500">
+                            ***Choose Shipping Address
+                        </label>
+                        <select
+                            onChange={(e) => {
+                                const method = shippingAddress.find((p) => p._id === e.target.value);
+                                setSelectedShippingAddress(method || null);
+                            }}
+                            defaultValue=""
+                            className="w-full p-2 border rounded"
+                        >
+                            <option value="" disabled>
+                                -- Choose Shipping Address --
+                            </option>
+                            {shippingAddress.map((address) => (
+                                <option key={address._id} value={address._id}>
+                                    {address.region}--{address.addressLine}
+                                </option>
+                            ))}Z
+                        </select>
+                    </div>
+
+                    {/* Show details */}
+                    {selectedShippingAddress && (
+                        <div className="space-y-2 text-sm text-gray-700">
+                            <p><strong>Region:</strong>{selectedShippingAddress.region}</p>
+                            <p><strong>Location:</strong> {selectedShippingAddress.addressLine}</p>
+                            <p><strong>Address:</strong> {selectedShippingAddress.barangay} {selectedShippingAddress.municipal},
+                                {selectedShippingAddress.province}</p>
+                            <p><strong>Postal Code:</strong> {selectedShippingAddress.postalCode}</p>
                         </div>
                     )}
                     <div className="p-6">

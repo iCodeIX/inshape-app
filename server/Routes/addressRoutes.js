@@ -1,5 +1,5 @@
 import express from "express";
-import { addShippingAddress, fetchShippingAddress, deleteShippingAddress, updateShippingAddress } from "../Controllers/addressControllers.js";
+import { addShippingAddress, fetchShippingAddress, deleteShippingAddress, updateShippingAddress } from "../Controllers/addressController.js";
 import { authMiddleware } from "../Middlewares/authMiddleware.js";
 
 const router = express.Router();

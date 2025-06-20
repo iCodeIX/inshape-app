@@ -19,6 +19,12 @@ const sampleProducts = {
         status: 'Placed',
         price: '$49.99',
     },
+    delivered: {
+        id: 4,
+        name: 'bbq',
+        status: 'delivered',
+        price: '$419.99',
+    }
 };
 
 const ViewOrders = () => {
@@ -52,6 +58,7 @@ const ViewOrders = () => {
             if (tab === 'shipping') return `${base} bg-blue-600 text-white`;
             if (tab === 'cancelled') return `${base} bg-red-600 text-white`;
             if (tab === 'placed') return `${base} bg-green-600 text-white`;
+            if (tab === 'delivered') return `${base} bg-black text-white`;
         }
         return `${base} bg-gray-200 text-gray-700 hover:bg-gray-300`;
     };
@@ -60,7 +67,7 @@ const ViewOrders = () => {
         <div className="max-w-2xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-4">Your Orders</h2>
 
-            <div className="flex gap-4 mb-6">
+            <div className="flex flex-wrap gap-2 mb-6 overflow-x-auto">
                 <button className={getTabClass('placed')} onClick={() => setActiveTab('placed')}>
                     Placed
                 </button>
@@ -70,13 +77,16 @@ const ViewOrders = () => {
                 <button className={getTabClass('cancelled')} onClick={() => setActiveTab('cancelled')}>
                     Cancelled
                 </button>
-
+                <button className={getTabClass('delivered')} onClick={() => setActiveTab('delivered')}>
+                    Delivered
+                </button>
             </div>
 
             <div>
                 {activeTab === 'shipping' && renderProduct(sampleProducts.shipping)}
                 {activeTab === 'cancelled' && renderProduct(sampleProducts.cancelled)}
                 {activeTab === 'placed' && renderProduct(sampleProducts.placed)}
+                {activeTab === 'delivered' && renderProduct(sampleProducts.delivered)}
             </div>
         </div>
     );

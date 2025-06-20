@@ -6,18 +6,20 @@ dotenv.config();
 export const addShippingAddress = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { addressLine1, addressLine2, postalCode } = req.body;
+        const { addressLine, region, province, municipal, barangay, postalCode } = req.body;
         console.log("Console address", req.body);
-        if (!addressLine1 || !addressLine2 || !postalCode) {
+        if (!addressLine || !region || !province || !municipal || !barangay || !postalCode) {
             return res.status(400).json({ message: "Required input empty" });
         }
 
         const shippingAddress = new ShippingAddress({
             userId,
-            addressLine1,
-            addressLine2,
+            addressLine,
+            region,
+            province,
+            municipal,
+            barangay,
             postalCode
-
         });
 
         await shippingAddress.save();
