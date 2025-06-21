@@ -4,24 +4,24 @@ import { toast } from "react-toastify";
 
 export const placeOrder = createAsyncThunk(
     "order/placeOrder",
-    async (shippingAddressIdData, { rejectWithValue }) => {
+    async (orderData, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
                 return rejectWithValue("Login first, token not found");
             }
 
-            const res = await API.post("order/place-order", shippingAddressIdData, {
+            const res = await API.post("order/place-order", orderData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(shippingAddressIdData)
-            toast.success("ShippingAddress Added");
-            return res.data.order;
+
+            toast.success("Order placed successfully!");
+            return res.data; // includes { message, orderId }
         } catch (error) {
             const message =
-                error.response?.data?.message || error.message || "Failed to add Orders";
+                error.response?.data?.message || error.message || "Failed to place order";
             toast.error(message);
             return rejectWithValue(message);
         }
@@ -29,7 +29,7 @@ export const placeOrder = createAsyncThunk(
 );
 
 export const fetchOrders = createAsyncThunk(
-    "shippingAddress/fetchShippingAddress",
+    "orders/fetchOrders", // ✅ clearer
     async (_, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
@@ -43,15 +43,16 @@ export const fetchOrders = createAsyncThunk(
                 },
             });
 
-            return res.data.orders;
+            console.log("Fetched Orders:", res.data);
+            return res.data.orders; // ✅ make sure the backend is returning `orders`
         } catch (error) {
             const message =
-                error.response?.data?.message || error.message || "Failed to fetch Orders";
-            toast.error(message);
+                error.response?.data?.message || error.message || "Failed to fetch orders";
             return rejectWithValue(message);
         }
     }
 );
+
 
 export const cancelOrders = createAsyncThunk(
     "shippingAddress/deleteShippingAddress",

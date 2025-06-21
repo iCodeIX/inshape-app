@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import closeIcon from '../../assets/close.png';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPaymentMethods } from '../../features/payment/paymentSlice';
 import { fetchShippingAddress } from '../../features/shippingAddress/shippingAddressSlice';
+import { placeOrder } from '../../features/order/orderSlice';
+import { toast } from 'react-toastify';
+import { fetchCart } from '../../features/cart/cartSlice';
 
 const OrdersSummary = () => {
-
     const cartItems = useSelector((state) => state.cart.items);
     const payments = useSelector((state) => state.payment.items) || [];
     const shippingAddress = useSelector((state) => state.shippingAddress.items) || [];
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
+
     const [selectedMethod, setSelectedMethod] = useState(null);
     const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
 
     const [showModal, setShowModal] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    console.log(shippingAddress);
-
     useEffect(() => {
         if (token) {
             dispatch(fetchPaymentMethods());
             dispatch(fetchShippingAddress());
         }
-    }, [token, dispatch])
-
+    }, [token, dispatch]);
 
     const handleProceed = () => {
         if (!selectedMethod) {
@@ -38,20 +38,36 @@ const OrdersSummary = () => {
             return;
         }
         setShowModal(true);
-    }
+    };
+
     const handleCancel = () => {
         setShowModal(false);
     };
 
-    const handlePaymentDone = () => {
+    const handlePaymentDone = async () => {
+        if (!selectedMethod || !selectedShippingAddress) {
+            alert("Missing payment or shipping info.");
+            return;
+        }
 
-        // Add logic to verify or move to next step
-        setShowModal(false);
-        setShowConfirmationModal(true);
-        // navigate("/view-orders");
+        const orderData = {
+            paymentId: selectedMethod._id,
+            shippingAddressId: selectedShippingAddress._id
+        };
+
+        try {
+            await dispatch(placeOrder(orderData)).unwrap();
+            fetchCart();
+            setShowModal(false);
+            setShowConfirmationModal(true);
+        } catch (error) {
+            console.error("Failed to place order:", error);
+            toast.error("Failed to place order");
+        }
     };
 
     const closeConfirmation = () => {
+
         setShowConfirmationModal(false);
         navigate("/view-orders");
     };
@@ -61,13 +77,12 @@ const OrdersSummary = () => {
         0
     );
 
-
     return (
         <div className='bg-white flex flex-col h-full w-full top-0 z-50 sm:p-12 sm:flex-row absolute'>
-
             <div onClick={() => navigate("/all-products")} className='absolute right-0 top-0 w-8 m-4 cursor-pointer'>
-                <img src={closeIcon}></img>
+                <img src={closeIcon} alt="Close" />
             </div>
+
             <div className="bg-gray-200 sm:w-1/2 mb-4 mx-6 rounded-lg shadow text-sm font-mono p-4">
                 <p className="text-center text-red-500 font-bold text-base mb-4">ORDER SUMMARY</p>
 
@@ -102,17 +117,14 @@ const OrdersSummary = () => {
                             <span>₱{subtotal + 50}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
+
             <div className="sm:w-1/2 px-4 bg-white rounded-lg shadow-md mx-auto space-y-4 font-sans text-sm">
-
-
-
                 <div className="bg-white p-4 rounded-lg shadow">
                     <p onClick={() => navigate("/setup-payment-methods")} className='text-sm font-semibold underline text-green-500 cursor-pointer'>No Payment Method? Click Here!</p>
                     <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
-                    {/* Dropdown menu */}
+
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-red-500">
                             ***Choose Payment Method
@@ -125,9 +137,7 @@ const OrdersSummary = () => {
                             defaultValue=""
                             className="w-full p-2 border rounded"
                         >
-                            <option value="" disabled>
-                                -- Choose Payment Method --
-                            </option>
+                            <option value="" disabled>-- Choose Payment Method --</option>
                             {payments.map((method) => (
                                 <option key={method._id} value={method._id}>
                                     {method.paymentMethod} - {method.payerNumber}
@@ -135,7 +145,7 @@ const OrdersSummary = () => {
                             ))}
                         </select>
                     </div>
-                    {/* Show details */}
+
                     {selectedMethod && (
                         <div className="space-y-2 text-sm text-gray-700">
                             <p><strong>First Name:</strong> {selectedMethod.firstName}</p>
@@ -147,7 +157,6 @@ const OrdersSummary = () => {
                         </div>
                     )}
 
-                    {/* Dropdown menu */}
                     <div className="mb-4 mt-4">
                         <p onClick={() => navigate("/setup-shipping-address")} className='text-sm font-semibold underline text-green-500 cursor-pointer'>No Shipping Address? Click Here!</p>
                         <label className="block text-sm font-medium text-gray-700 mb-1 text-red-500">
@@ -161,27 +170,24 @@ const OrdersSummary = () => {
                             defaultValue=""
                             className="w-full p-2 border rounded"
                         >
-                            <option value="" disabled>
-                                -- Choose Shipping Address --
-                            </option>
+                            <option value="" disabled>-- Choose Shipping Address --</option>
                             {shippingAddress.map((address) => (
                                 <option key={address._id} value={address._id}>
-                                    {address.region}--{address.addressLine}
+                                    {address.region} -- {address.addressLine}
                                 </option>
-                            ))}Z
+                            ))}
                         </select>
                     </div>
 
-                    {/* Show details */}
                     {selectedShippingAddress && (
                         <div className="space-y-2 text-sm text-gray-700">
-                            <p><strong>Region:</strong>{selectedShippingAddress.region}</p>
+                            <p><strong>Region:</strong> {selectedShippingAddress.region}</p>
                             <p><strong>Location:</strong> {selectedShippingAddress.addressLine}</p>
-                            <p><strong>Address:</strong> {selectedShippingAddress.barangay} {selectedShippingAddress.municipal},
-                                {selectedShippingAddress.province}</p>
+                            <p><strong>Address:</strong> {selectedShippingAddress.barangay}, {selectedShippingAddress.municipal}, {selectedShippingAddress.province}</p>
                             <p><strong>Postal Code:</strong> {selectedShippingAddress.postalCode}</p>
                         </div>
                     )}
+
                     <div className="p-6">
                         <button
                             onClick={handleProceed}
@@ -189,7 +195,7 @@ const OrdersSummary = () => {
                         >
                             Proceed to Pay
                         </button>
-                        {/* main modal */}
+
                         {showModal && (
                             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                                 <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg relative">
@@ -229,8 +235,6 @@ const OrdersSummary = () => {
                             </div>
                         )}
 
-
-                        {/* Confirmation Modal */}
                         {showConfirmationModal && (
                             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                 <div className="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
@@ -251,13 +255,9 @@ const OrdersSummary = () => {
                         )}
                     </div>
                 </div>
-
-
-
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default OrdersSummary
+export default OrdersSummary;

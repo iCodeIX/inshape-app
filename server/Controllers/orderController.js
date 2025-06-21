@@ -3,14 +3,16 @@ import Order from '../Models/Order.js';
 import ShippingAddress from '../Models/ShippingAddress.js';
 import Payment from '../Models/Payment.js';
 import Product from '../Models/Product.js';
+import User from '../Models/User.js';
 
 export const placeOrder = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { shippingAddressId, paymentId, paymentMethod } = req.body;
+        const { shippingAddressId, paymentId } = req.body;
 
         // 1. Get Cart
-        const cart = await Cart.findOne({ user: userId }).populate('items.product');
+        const cart = await Cart.findOne({ userId: userId }).populate('items.productId');
+
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({ message: 'Your cart is empty' });
         }
@@ -18,7 +20,7 @@ export const placeOrder = async (req, res) => {
         // 2. Get Shipping Address
         const shippingAddress = await ShippingAddress.findOne({
             _id: shippingAddressId,
-            user: userId
+            userId: userId
         });
 
         if (!shippingAddress) {
@@ -28,7 +30,7 @@ export const placeOrder = async (req, res) => {
         // 3. Get Payment Info
         const payment = await Payment.findOne({
             _id: paymentId,
-            user: userId
+            userId: userId
         });
 
         if (!payment) {
@@ -37,48 +39,48 @@ export const placeOrder = async (req, res) => {
 
         // 4. Build Order Items Snapshot
         const orderItems = cart.items.map(item => ({
-            product: item.product._id,
+            productId: item.productId,
             quantity: item.quantity
         }));
 
         const itemsPrice = cart.items.reduce(
-            (acc, item) => acc + item.quantity * item.product.price,
+            (acc, item) => acc + item.quantity * item.productId.productPrice,
             0
         );
-        const shippingPrice = 50; // You can make this dynamic
+
+        const shippingPrice = 50;
         const totalPrice = itemsPrice + shippingPrice;
 
-        // 5. Create Order
+        // 5. Create Order (match your Order schema exactly)
         const newOrder = new Order({
-            user: userId,
+            userId: userId,
             orderItems,
             shippingAddress: {
-                fullName: shippingAddress.fullName,
-                address: shippingAddress.address,
-                city: shippingAddress.city,
-                postalCode: shippingAddress.postalCode,
-                country: shippingAddress.country,
-                phone: shippingAddress.phone
+                address: shippingAddress.addressLine,
+                region: shippingAddress.region,
+                province: shippingAddress.province,
+                municipal: shippingAddress.municipal,
+                barangay: shippingAddress.barangay,
+                postalCode: shippingAddress.postalCode
             },
             paymentResult: {
-                method: payment.method,
-                transactionId: payment.transactionId,
-                status: payment.status,
-                paidAt: payment.paidAt
+                method: payment.paymentMethod,
+                payerName: `${payment.firstName} ${payment.middleInitial || ''} ${payment.lastName}`.trim(),
+                email: payment.email || '',
+                payerNumber: payment.payerNumber
             },
-            paymentMethod,
             itemsPrice,
             shippingPrice,
             totalPrice,
             isPaid: payment.status === 'Paid',
             paidAt: payment.paidAt || null,
-            status: 'shipping'
+            // Optional: let the default handle status as "placed"
+            // status: 'placed'
         });
 
         await newOrder.save();
 
-        // 6. Clear Cart (optional)
-        await Cart.deleteOne({ user: userId });
+        await Cart.deleteOne({ userId: userId });
 
         return res.status(201).json({
             message: 'Order placed successfully',
@@ -92,8 +94,40 @@ export const placeOrder = async (req, res) => {
 
 
 export const fetchOrders = async (req, res) => {
+    try {
+        const userId = req.user._id;
 
-}
+        const orders = await Order.find({ userId })
+            .populate({
+                path: 'orderItems.productId',
+                model: Product,
+                select: 'productName productPrice productImage'
+            })
+            .populate({
+                path: 'userId',
+                model: User,
+                select: 'name email'
+            })
+            .sort({ createdAt: -1 });
+
+        const formattedOrders = orders.map(order => ({
+            ...order.toObject(),
+            userId: order.userId,
+            orderItems: order.orderItems.map(item => ({
+                ...item,
+                productId: item.productId,
+                quantity: item.quantity
+            }))
+        }));
+
+        // ✅ wrap in object so res.data.orders is valid
+        res.status(200).json({ orders: formattedOrders });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).json({ message: 'Server error fetching orders' });
+    }
+};
+
 
 export const cancelOrders = async (req, res) => {
 

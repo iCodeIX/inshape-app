@@ -2,14 +2,15 @@ import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema(
     {
-        user: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
+
         orderItems: [
             {
-                product: {
+                productId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Product',
                     required: true
@@ -21,31 +22,29 @@ const orderSchema = new mongoose.Schema(
             }
         ],
 
-        // ✅ Embedded shipping snapshot
         shippingAddress: {
-            fullName: { type: String, required: true },
             address: { type: String, required: true },
-            city: { type: String, required: true },
-            postalCode: { type: String, required: true },
-            country: { type: String, required: true },
-            phone: { type: String }
+            region: { type: String, required: true },
+            province: { type: String, required: true },
+            municipal: { type: String, required: true },
+            barangay: { type: String, required: true },
+            postalCode: { type: String, required: true }
         },
 
-        // ✅ Embedded payment snapshot
         paymentResult: {
-            method: { type: String, required: true },         // e.g., GCash
-            transactionId: { type: String },
-            status: { type: String },                         // 'Paid', 'Pending'
-            paidAt: { type: Date }
+            method: { type: String, required: true },
+            payerName: { type: String, required: true },
+            email: { type: String, required: true },
+            payerNumber: { type: String, required: true }
+
         },
+
         itemsPrice: { type: Number, required: true },
         shippingPrice: { type: Number, required: true },
         totalPrice: { type: Number, required: true },
 
         isPaid: { type: Boolean, default: false },
         paidAt: { type: Date },
-        isDelivered: { type: Boolean, default: false },
-        deliveredAt: { type: Date },
 
         status: {
             type: String,
@@ -59,4 +58,5 @@ const orderSchema = new mongoose.Schema(
 );
 
 const Order = mongoose.model('Order', orderSchema);
+
 export default Order;
