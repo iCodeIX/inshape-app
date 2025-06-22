@@ -29,7 +29,7 @@ export const placeOrder = createAsyncThunk(
 );
 
 export const fetchOrders = createAsyncThunk(
-    "orders/fetchOrders", // ✅ clearer
+    "order/fetchOrders", // ✅ clearer
     async (_, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
@@ -53,22 +53,21 @@ export const fetchOrders = createAsyncThunk(
     }
 );
 
-
-export const cancelOrders = createAsyncThunk(
-    "shippingAddress/deleteShippingAddress",
-    async (shippingAddressId, { rejectWithValue }) => {
+export const cancelOrder = createAsyncThunk(
+    "order/cancelOrder", // 🔁 use lowercase action names for consistency
+    async (orderId, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) throw new Error("Token not found");
 
-            await API.post(`order/cancel-orders/${shippingAddressId}`, {
+            const res = await API.post(`order/cancel-order/${orderId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
 
-            toast.success("Orders cancelled");
-            return shippingAddressId; // return id to remove from state
+            toast.success("Order cancelled");
+            return res.data.order; // 👈 This returns a single order (object)
         } catch (error) {
             const message = error.response?.data?.message || error.message;
             toast.error(message);
@@ -76,6 +75,7 @@ export const cancelOrders = createAsyncThunk(
         }
     }
 );
+
 
 
 const orderSlice = createSlice({
@@ -122,8 +122,7 @@ const orderSlice = createSlice({
             .addCase(fetchOrders.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload || action.error.message;
-            }).addCase(cancelOrders.fulfilled, (state, action) => {
-                state.items = state.items.filter(item => item._id !== action.payload);
+            }).addCase(cancelOrder.fulfilled, (state, action) => {
             });
     },
 });

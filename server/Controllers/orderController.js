@@ -129,6 +129,23 @@ export const fetchOrders = async (req, res) => {
 };
 
 
-export const cancelOrders = async (req, res) => {
+export const cancelOrder = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const orderId = req.params.id;
 
-}
+        const order = await Order.findOne({ _id: orderId, userId });
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        order.status = "cancelled";
+        await order.save();
+
+        res.status(200).json({ message: "Order cancelled", order });
+    } catch (err) {
+        console.error("Cancel order error:", err);
+        res.status(500).json({ message: "Server error cancelling order" });
+    }
+};
