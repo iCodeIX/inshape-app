@@ -1,24 +1,20 @@
-import React from 'react'
-// import './TopProducts.css'
-import { useEffect } from 'react';
-import { useState } from 'react';
-import axios from "axios";
-import usePagination from '../utils/usePagination.jsx';
-import { addToCart } from '../../features/cart/cartSlice.js';
-import API from '../utils/axios.jsx';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../features/cart/cartSlice';
+import usePagination from '../utils/usePagination';
+import API from '../utils/axios';
 
 const TopProducts = () => {
     const [topProducts, setTopProducts] = useState([]);
+    const dispatch = useDispatch();
+
     const {
         currentPage,
         totalPages,
         paginatedData,
         nextPage,
         prevPage,
-        goToPage
-    } = usePagination(topProducts, 12); // 5 items per page
-
+    } = usePagination(topProducts, 12);
 
     useEffect(() => {
         fetchProducts();
@@ -26,61 +22,90 @@ const TopProducts = () => {
 
     const fetchProducts = async () => {
         try {
-            const res = await API.post("/product/topProductsList");
+            const res = await API.post('/product/topProductsList');
             setTopProducts(res.data);
         } catch (error) {
-            console.log("error fetching".error)
+            console.error('Error fetching top products:', error);
         }
-
     };
-    const dispatch = useDispatch();
 
-    const handleAddToCart = async (productId, quantity = 1) => {
+    const handleAddToCart = (productId, quantity = 1) => {
         dispatch(addToCart({ productId, quantity }));
     };
 
     return (
-        <section className="all-products p-8">
-            <h2 className='text-center text-2xl font-bold'>Top Selling Products</h2>
-            <p className='text-center text-lg p-4'>Products buyers massively buying</p>
-            <div className="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-12 mt-5 justify-start">
-                {paginatedData.map((product, index) => (
-                    <div className="relative flex flex-col gap-2 bg-white cursor-pointer border border-gray-300 rounded-xl p-4 shadow-md transition-transform duration-300 ease-in-out w-full" key={product._id}>
-                        {<span className="absolute -top-2 -left-2 text-sm bg-red-500 p-1 text-white rounded-md"> Sold: {product.rating}</span>}
-                        <img className="w-80 h-60" src={product.productImage} alt={product.productName} />
-                        <h3 className="text-md font-semibold">{product.productName}</h3>
-                        <p className="text-sm ">Price: <label>₱{product.productPrice}</label></p>
-                        <button className="w-full my-2 p-2 text-white text-sm bg-red-500 cursor-pointer hover:bg-red-300 mx-auto" onClick={() => handleAddToCart(product._id)}>ADD TO CART</button>
+        <section className="py-12 px-6 bg-gray-50 min-h-screen">
+            <div className="max-w-7xl mx-auto">
+                <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-2">
+                    🔥 Top Selling Products
+                </h2>
+                <p className="text-center text-gray-600 mb-10">
+                    These items are flying off the shelves!
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    {paginatedData.map((product) => (
+                        <div
+                            key={product._id}
+                            className="relative bg-white rounded-xl shadow hover:shadow-md transition p-4 flex flex-col"
+                        >
+                            <span className="absolute top-3 left-3 bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                                Sold: {product.rating}
+                            </span>
+
+                            <img
+                                src={product.productImage || '/placeholder.jpg'}
+                                alt={product.productName}
+                                className="w-full h-56 object-cover rounded-lg mb-4"
+                            />
+                            <div className="flex-grow">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+                                    {product.productName}
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-2 truncate">
+                                    {product.productDesc || 'Top rated item'}
+                                </p>
+                            </div>
+                            <div className="mt-auto flex justify-between items-center">
+                                <span className="text-red-600 font-bold text-lg">
+                                    ₱{product.productPrice}
+                                </span>
+                                <button
+                                    onClick={() => handleAddToCart(product._id)}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 text-sm font-medium"
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="mt-10 flex justify-center">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={prevPage}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                        >
+                            Previous
+                        </button>
+                        <span className="text-sm font-medium text-gray-700">
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                            onClick={nextPage}
+                            disabled={currentPage === totalPages}
+                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                        >
+                            Next
+                        </button>
                     </div>
-                ))
-                }
-            </div >
-
-
-            <div className="mt-5 flex justify-center">
-                <div className="flex items-center space-x-4 bg-white p-4 rounded-2xl shadow-md">
-                    <button
-                        onClick={prevPage}
-                        disabled={currentPage === 1}
-                        className="cursor-pointer p-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    >
-                        Previous
-                    </button>
-                    <span className="text-gray-700 font-medium">
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={nextPage}
-                        disabled={currentPage === totalPages}
-                        className="cursor-pointer px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    >
-                        Next
-                    </button>
                 </div>
             </div>
+        </section>
+    );
+};
 
-        </section >
-    )
-}
-
-export default TopProducts
+export default TopProducts;

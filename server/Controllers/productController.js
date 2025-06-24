@@ -18,16 +18,18 @@ export const addProduct = async (req, res) => {
     }
 }
 
-
-export const viewProductsList = async (req, res) => {
+export const fetchProducts = async (req, res) => {
     try {
         const products = await Product.find().sort({ createdAt: -1 });
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(400).json({ message: "error getting products / under routes" })
-    }
 
-}
+        // Important: Wrap it with a `products` key so your frontend gets `res.data.products`
+        res.status(200).json({ products });
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Error getting products" });
+    }
+};
+
 
 
 export const topProductsList = async (req, res) => {

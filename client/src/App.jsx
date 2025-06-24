@@ -17,6 +17,8 @@ import ManageProducts from './Components/Products/ManageProducts.jsx';
 import ViewOrders from './Components/Users/ViewOrders.jsx';
 import SetUpPaymentMethods from './Components/Users/SetUpPaymentMethods.jsx';
 import SetUpShippingAddress from './Components/Users/SetUpShippingAddress.jsx';
+import PrivacyPolicy from './Components/Site/PrivacyPolicy.jsx';
+import TermsOfService from './Components/Site/TermsOfService.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import OrdersSummary from './Components/Users/OrdersSummary.jsx';
@@ -27,7 +29,7 @@ import { fetchCart } from './features/cart/cartSlice'; // adjust path as needed
 function App() {
   const location = useLocation();
   const hiddenRoutes = ['/register', '/login', '/forgotPass', '/profile', '/cart', '/all-products', '/new-products', '/top-products', '/manage-products', '/orders-summary', '/view-orders',
-    '/setup-payment-methods', '/setup-shipping-address'];
+    '/setup-payment-methods', '/setup-shipping-address', '/privacy-policy', '/terms-of-service'];
   const hideLayoutComponents = hiddenRoutes.includes(location.pathname);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
@@ -60,6 +62,8 @@ function App() {
           <Route path="/view-orders" element={<ViewOrders />} />
           <Route path="/setup-payment-methods" element={<SetUpPaymentMethods />} />
           <Route path="/setup-shipping-address" element={<SetUpShippingAddress />} />
+          <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
         </Routes>
       </div>
 

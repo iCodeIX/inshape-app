@@ -1,11 +1,12 @@
 import express from "express";
-import { viewProductsList, addProduct, topProductsList } from "../Controllers/productController.js";
+import { fetchProducts, addProduct, topProductsList } from "../Controllers/productController.js";
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
 
 
 const router = express.Router();
 
 router.post("/addProduct", addProduct);
-router.post("/productsList", viewProductsList);
+router.get("/fetch-products", fetchProducts);
 router.post("/topProductsList", topProductsList);
 
 
