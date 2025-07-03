@@ -1,34 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../../features/product/productSlice';
 import { addToCart } from '../../features/cart/cartSlice';
 import usePagination from '../utils/usePagination';
 
 const NewProducts = () => {
-  const dispatch = useDispatch();
-  const { items: products, status } = useSelector((state) => state.product);
+    const dispatch = useDispatch();
+    const products = useSelector((state) => state.product.all);
+    const status = useSelector((state) => state.product.status.all);
 
+  // Fetch products once when idle
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchProducts());
     }
   }, [dispatch, status]);
 
+  // Reusable threshold date (e.g., last 100 days)
+  const thresholdDate = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 100);
+    return date;
+  }, []);
+
+  // Check if product is new
   const isNewProduct = (createdAt) => {
-    const createdDate = new Date(createdAt);
-    const threshold = new Date();
-    threshold.setDate(threshold.getDate() - 100);
-    return createdDate > threshold;
+    if (!createdAt) return false;
+    const created = new Date(createdAt);
+    return created > thresholdDate;
   };
 
+  // Filter only new products
   const newProducts = products.filter((product) => isNewProduct(product.createdAt));
+
+  // Pagination logic
   const {
     currentPage,
     totalPages,
     paginatedData,
     nextPage,
     prevPage,
-  } = usePagination(newProducts, 8);
+  } = usePagination(newProducts, 12);
 
   const handleAddToCart = (productId, quantity = 1) => {
     dispatch(addToCart({ productId, quantity }));
@@ -67,7 +79,9 @@ const NewProducts = () => {
                     <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
                       {product.productName}
                     </h3>
-                    <p className="text-sm text-gray-500 mb-2 truncate">{product.productDesc}</p>
+                    <p className="text-sm text-gray-500 mb-2 truncate">
+                      {product.productDesc || 'No description'}
+                    </p>
                   </div>
 
                   <div className="mt-auto flex justify-between items-center">
@@ -83,7 +97,7 @@ const NewProducts = () => {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Pagination Controls */}
             <div className="mt-10 flex justify-center">
               <div className="flex items-center gap-4">
                 <button

@@ -32,10 +32,12 @@ export const fetchProducts = async (req, res) => {
 
 
 
-export const topProductsList = async (req, res) => {
+export const getTopProducts = async (req, res) => {
     try {
-        const topRatedProducts = await Product.find().sort({ rating: -1 });
-        res.status(200).json(topRatedProducts);
+        const topRatedProducts = await Product.find({ rating: { $gt: 0 } })
+            .sort({ rating: -1 });
+
+        res.status(200).json({ topRatedProducts });
     } catch (error) {
         res.status(400).json({ message: "error getting products / under routes" })
     }

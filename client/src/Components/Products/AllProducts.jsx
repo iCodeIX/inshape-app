@@ -11,7 +11,8 @@ function useQuery() {
 
 const AllProducts = () => {
     const dispatch = useDispatch();
-    const { items: products, status } = useSelector((state) => state.product);
+    const products = useSelector((state) => state.product.all);
+    const status = useSelector((state) => state.product.status.all);
 
     const query = useQuery();
     const searchTerm = query.get('query') || '';
@@ -29,7 +30,7 @@ const AllProducts = () => {
         paginatedData,
         nextPage,
         prevPage,
-    } = usePagination(filteredProducts, 9);
+    } = usePagination(filteredProducts, 12);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -61,7 +62,7 @@ const AllProducts = () => {
                     </div>
                 ) : filteredProducts.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                             {paginatedData.map((product) => (
                                 <div
                                     key={product._id}

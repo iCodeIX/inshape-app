@@ -44,9 +44,9 @@ const UserProfile = ({ name, id, email }) => {
                     </button>
                     <button
                         className="w-full py-2 text-sm text-white bg-sky-900 rounded hover:bg-sky-700 transition"
-                        onClick={() => navigate('/manage-products')}
+                        onClick={() => navigate('/admin-panel')}
                     >
-                        Manage Products
+                        Admin Panel
                     </button>
                 </div>
 
