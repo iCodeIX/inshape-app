@@ -5,9 +5,9 @@ import { addToCart } from '../../features/cart/cartSlice';
 import usePagination from '../utils/usePagination';
 
 const NewProducts = () => {
-    const dispatch = useDispatch();
-    const products = useSelector((state) => state.product.all);
-    const status = useSelector((state) => state.product.status.all);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.all);
+  const status = useSelector((state) => state.product.status.all);
 
   // Fetch products once when idle
   useEffect(() => {
@@ -57,7 +57,7 @@ const NewProducts = () => {
             <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-600"></div>
             <span className="ml-2 text-gray-600">Loading...</span>
           </div>
-        ) : newProducts.length > 0 ? (
+        ) : status === "succeeded" && newProducts.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {paginatedData.map((product) => (
@@ -87,7 +87,7 @@ const NewProducts = () => {
                   <div className="mt-auto flex justify-between items-center">
                     <span className="text-red-600 font-bold text-lg">₱{product.productPrice}</span>
                     <button
-                      onClick={() => handleAddToCart(product._id)}
+                      onClick={(e) => { e.stopPropagation(); handleAddToCart(product._id) }}
                       className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 text-sm font-medium"
                     >
                       Add to Cart
@@ -120,9 +120,9 @@ const NewProducts = () => {
               </div>
             </div>
           </>
-        ) : (
+        ) : status === "succeeded" ? (
           <p className="text-center text-gray-500">No new products found.</p>
-        )}
+        ) : null}
       </div>
     </section>
   );

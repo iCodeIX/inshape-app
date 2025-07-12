@@ -23,15 +23,30 @@ import AdminPanel from './Components/Admin/AdminPanel.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import OrdersSummary from './Components/Users/OrdersSummary.jsx';
+import ProductDetails from './Components/Products/ProductDetails.jsx';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart } from './features/cart/cartSlice'; // adjust path as needed
 
 function App() {
   const location = useLocation();
-  const hiddenRoutes = ['/register', '/login', '/forgotPass', '/profile', '/cart', '/all-products', '/new-products', '/top-products', '/manage-products', '/orders-summary', '/view-orders',
-    '/setup-payment-methods', '/setup-shipping-address', '/privacy-policy', '/terms-of-service', '/admin-panel'];
-  const hideLayoutComponents = hiddenRoutes.includes(location.pathname);
+  const hiddenRoutes = [
+    '/register', '/login', '/forgotPass', '/profile', '/cart',
+    '/all-products', '/new-products', '/top-products', '/manage-products',
+    '/orders-summary', '/view-orders', '/setup-payment-methods',
+    '/setup-shipping-address', '/privacy-policy', '/terms-of-service',
+    '/admin-panel', '/product/:id' // include dynamic path
+  ];
+
+  const hideLayoutComponents = hiddenRoutes.some(route => {
+    if (route.includes(':')) {
+      // Convert route pattern like "/product/:id" into RegExp
+      const regex = new RegExp(`^${route.replace(/:[^/]+/g, '[^/]+')}$`);
+      return regex.test(location.pathname);
+    }
+    return route === location.pathname;
+  });
+
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
 
@@ -66,6 +81,7 @@ function App() {
           <Route path='/privacy-policy' element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/admin-panel" element={<AdminPanel />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
         </Routes>
       </div>
 

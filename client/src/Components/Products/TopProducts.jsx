@@ -43,7 +43,7 @@ const TopProducts = () => {
                         <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-600"></div>
                         <span className="ml-2 text-gray-600">Loading top products...</span>
                     </div>
-                ) : topProducts.length > 0 ? (
+                ) : topStatus === "succeeded" && topProducts.length > 0 ? (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                             {paginatedData.map((product) => (
@@ -73,7 +73,7 @@ const TopProducts = () => {
                                             ₱{product.productPrice}
                                         </span>
                                         <button
-                                            onClick={() => handleAddToCart(product._id)}
+                                            onClick={(e) => { e.stopPropagation(); handleAddToCart(product._id) }}
                                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 text-sm font-medium"
                                         >
                                             Add to Cart
@@ -106,9 +106,9 @@ const TopProducts = () => {
                             </div>
                         </div>
                     </>
-                ) : (
+                ) : topStatus === "succeeded" ? (
                     <p className="text-center text-gray-500">No top products available.</p>
-                )}
+                ) : null}
             </div>
         </section>
     );

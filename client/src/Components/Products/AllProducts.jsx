@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchProducts } from '../../features/product/productSlice';
 import { addToCart } from '../../features/cart/cartSlice';
 import usePagination from '../utils/usePagination';
@@ -11,6 +11,7 @@ function useQuery() {
 
 const AllProducts = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const products = useSelector((state) => state.product.all);
     const status = useSelector((state) => state.product.status.all);
 
@@ -38,6 +39,10 @@ const AllProducts = () => {
         }
     }, [dispatch, status]);
 
+    const handleProductClick = (id) => {
+        navigate(`/product/${id}`);
+    };
+
     const handleAddToCart = (productId, quantity = 1) => {
         dispatch(addToCart({ productId, quantity }));
     };
@@ -60,14 +65,15 @@ const AllProducts = () => {
                         <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-600"></div>
                         <span className="ml-2 text-gray-600">Loading products...</span>
                     </div>
-                ) : filteredProducts.length > 0 ? (
+                ) : status === "succeeded" && filteredProducts.length > 0 ? (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                             {paginatedData.map((product) => (
                                 <div
                                     key={product._id}
                                     className="bg-white rounded-xl shadow hover:shadow-md transition p-4 flex flex-col"
-                                >
+                                    onClick={() => handleProductClick(product._id)}
+                                    style={{ cursor: 'pointer' }} >
                                     <img
                                         src={product.productImage || "/placeholder.jpg"}
                                         alt={product.productName}
@@ -86,7 +92,7 @@ const AllProducts = () => {
                                             ₱{product.productPrice}
                                         </span>
                                         <button
-                                            onClick={() => handleAddToCart(product._id)}
+                                            onClick={(e) => { e.stopPropagation(); handleAddToCart(product._id) }}
                                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 text-sm font-medium"
                                         >
                                             Add to Cart
@@ -119,11 +125,11 @@ const AllProducts = () => {
                             </div>
                         </div>
                     </>
-                ) : (
+                ) : status === "succeeded" ? (
                     <p className="text-center text-red-500 mt-10">
                         No products {hasSearch ? `found for "${searchTerm}"` : 'available'}.
                     </p>
-                )}
+                ) : null}
             </div>
         </section>
     );
