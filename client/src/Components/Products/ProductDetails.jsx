@@ -1,7 +1,7 @@
 // ProductDetails.jsx
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../utils/axios";
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -10,7 +10,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await axios.get(`/api/products/${id}`);
+                const res = await API.get(`/product/${id}`);
                 setProduct(res.data);
             } catch (err) {
                 console.error("Failed to fetch product:", err);
@@ -18,17 +18,17 @@ const ProductDetails = () => {
         };
 
         fetchProduct();
-        window.scrollTo(0, 0); // Scroll to top when page loads
     }, [id]);
 
     if (!product) return <p>Loading...</p>;
 
     return (
         <div className="product-details">
-            <img src={product.image} alt={product.name} />
-            <h1>{product.name}</h1>
-            <p>{product.description}</p>
-            <strong>₱{product.price}</strong>
+            {console.log(product)}
+            <img src={product.productImage} alt={product.name} />
+            <h1>{product.productName}</h1>
+            <p>{product.productDesc}</p>
+            <strong>₱{product.productPrice}</strong>
         </div>
     );
 };

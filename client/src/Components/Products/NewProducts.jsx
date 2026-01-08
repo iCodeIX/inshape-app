@@ -19,7 +19,7 @@ const NewProducts = () => {
   // Reusable threshold date (e.g., last 100 days)
   const thresholdDate = useMemo(() => {
     const date = new Date();
-    date.setDate(date.getDate() - 100);
+    date.setDate(date.getDate() - 1000);
     return date;
   }, []);
 

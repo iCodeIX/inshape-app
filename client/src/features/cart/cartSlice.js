@@ -10,7 +10,8 @@ export const addToCart = createAsyncThunk(
             const token = localStorage.getItem("token");
 
             if (!token) {
-                toast.error('Not authenticated. Please log in.');
+                toast.error('Please login your account before add to cart!');
+                return;
             }
             const res = await API.post(
                 '/cart/add',
